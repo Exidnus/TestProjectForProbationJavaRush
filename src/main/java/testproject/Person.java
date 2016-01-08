@@ -80,6 +80,8 @@ public class Person {
         this.name = name;
     }
 
+    //TODO написать метод для получения приемлемого представления даты в виде строки (без миллисекунд)
+
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
