@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class PersonControllerTest {
     @Test
-    public void shouldGoPersonsPage() throws Exception {
+    public void shouldGoToPersonsPage() throws Exception {
         List<Person> persons = createPersonsList();
         PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
         Mockito.when(mockRepository.getAll()).thenReturn(persons);
@@ -32,6 +32,15 @@ public class PersonControllerTest {
                 .andExpect(MockMvcResultMatchers.model().attributeExists("personsList"))
                 .andExpect(MockMvcResultMatchers.model().attribute("personsList",
                         Matchers.hasItems(persons.toArray())));
+    }
+
+    @Test
+    public void shouldGoToAddPersonpage() throws Exception {
+        PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
+        PersonController controller = new PersonController(mockRepository);
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc.perform(MockMvcRequestBuilders.get("/people/add"))
+                .andExpect(MockMvcResultMatchers.view().name("addperson"));
     }
 
     private List<Person> createPersonsList() {

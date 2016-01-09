@@ -40,6 +40,16 @@ public class PersonRepositoryHibernate implements PersonRepository {
 
     @Override
     public void addPerson(Person person) {
-
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.save(person);
+            session.getTransaction().commit();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
     }
 }

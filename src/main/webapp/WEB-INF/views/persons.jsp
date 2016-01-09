@@ -5,8 +5,7 @@
     <head>
         <meta charset="utf-8">
         <title>Список людей</title>
-        <link rel="stylesheet" type="text/css"
-                        href="<c:url value="/resources/style.css" />" >
+        <link rel="stylesheet" type="text/css" href="<c:url value="/resources/style.css" />" >
     </head>
     <body>
         <div class="basic">
@@ -27,6 +26,12 @@
                     </tr>
                 </c:forEach>
             </table>
+            <p>
+            <a href="<c:url value="/people/add" />">Добавить человека</a>
+            </p>
+            <p>
+            <a href="<c:url value="/homepage" />">Вернуться к списку проектов</a>
+            </p>
         </div>
     </body>
 </html>
