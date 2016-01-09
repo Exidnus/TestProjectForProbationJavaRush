@@ -18,9 +18,4 @@ public class DataConfig {
     public SessionFactory sessionFactory() {
         return new Configuration().configure().buildSessionFactory();
     }
-
-    /*@Bean
-    public HibernateTransactionManager hibernateTransactionManager(SessionFactory sessionFactory) {
-        return new HibernateTransactionManager(sessionFactory);
-    }*/
 }
