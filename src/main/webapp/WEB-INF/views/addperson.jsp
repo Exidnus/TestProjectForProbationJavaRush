@@ -9,10 +9,12 @@
     </head>
     <body>
         <h1>Добавление человека в список</h1>
-        <form method="GET" action="<c:url value="/people" />" >
+        <form method="POST" action="<c:url value="/people" />" >
             Имя: <input type="text" name="name" /><br/>
             Возраст: <input type="text" name="age" /><br/>
-            <input type="checkbox" name = "isAdmin" value="yes" /> Админ<br/>
+            Админ: <br/>
+            <input type="radio" name="isAdmin" value="yes" />Да<br/>
+            <input type="radio" name="isAdmin" value="no" />Нет<br/>
             <input type="Submit" value="Добавить" />
         </form>
     </body>

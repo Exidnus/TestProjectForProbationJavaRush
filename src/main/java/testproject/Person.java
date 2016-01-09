@@ -17,7 +17,7 @@ import java.util.Date;
 @Table(name="persons")
 public class Person {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private int age;
@@ -82,7 +82,7 @@ public class Person {
 
     //TODO написать метод для получения приемлемого представления даты в виде строки (без миллисекунд)
 
-    @Override
+    /*@Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id).append(name).append(age)
@@ -99,7 +99,7 @@ public class Person {
         return new EqualsBuilder().append(this.name, that.name)
                 .append(this.age, that.age).append(this.createdDate, that.createdDate)
                 .append(this.isAdmin, that.isAdmin).isEquals();
-    }
+    }*/
 
     @Override
     public String toString() {
