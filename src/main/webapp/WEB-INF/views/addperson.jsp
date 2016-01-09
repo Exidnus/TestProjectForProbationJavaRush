@@ -9,7 +9,7 @@
     </head>
     <body>
         <h1>Добавление человека в список</h1>
-        <form method="POST" action="<c:url value="/people" />" >
+        <form method="POST" action="<c:url value="/people/adding" />" >
             Имя: <input type="text" name="name" /><br/>
             Возраст: <input type="text" name="age" /><br/>
             Админ: <br/>

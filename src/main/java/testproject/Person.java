@@ -8,6 +8,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -16,7 +17,9 @@ import java.util.Date;
 @Entity
 @Table(name="persons")
 public class Person {
+    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
     @Id
+    //TODO разобраться, почему изменение или отсутствие стратегии приводит к ошибке (без Spring'a ее не было)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
@@ -80,9 +83,11 @@ public class Person {
         this.name = name;
     }
 
-    //TODO написать метод для получения приемлемого представления даты в виде строки (без миллисекунд)
+    public String getSimpleDate() {
+        return simpleDateFormat.format(createdDate);
+    }
 
-    /*@Override
+    @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id).append(name).append(age)
@@ -99,7 +104,7 @@ public class Person {
         return new EqualsBuilder().append(this.name, that.name)
                 .append(this.age, that.age).append(this.createdDate, that.createdDate)
                 .append(this.isAdmin, that.isAdmin).isEquals();
-    }*/
+    }
 
     @Override
     public String toString() {

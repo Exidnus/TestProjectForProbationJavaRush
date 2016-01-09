@@ -6,6 +6,7 @@ import testproject.Person;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -30,5 +31,13 @@ public class PersonRepositoryListSimpleImpl implements PersonRepository {
     @Override
     public void addPerson(Person person) {
         persons.add(person);
+    }
+
+    @Override
+    public void deletePersonById(int id) {
+        Iterator<Person> iterator = persons.iterator();
+        while(iterator.hasNext()) {
+            Person person = iterator.next();
+        }
     }
 }

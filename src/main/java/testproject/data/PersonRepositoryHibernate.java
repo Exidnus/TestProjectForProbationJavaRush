@@ -52,4 +52,17 @@ public class PersonRepositoryHibernate implements PersonRepository {
             }
         }
     }
+
+    @Override
+    public void deletePersonById(int id) {
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            session.createQuery("DELETE Person WHERE id = :id").setParameter("id", id).executeUpdate();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+    }
 }

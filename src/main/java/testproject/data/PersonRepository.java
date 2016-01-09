@@ -10,5 +10,6 @@ import java.util.List;
 public interface PersonRepository {
     List<Person> getAll();
     void addPerson(Person person);
+    void deletePersonById(int id);
     //TODO методы для удаления и изменения, возможно, для пейджинга
 }

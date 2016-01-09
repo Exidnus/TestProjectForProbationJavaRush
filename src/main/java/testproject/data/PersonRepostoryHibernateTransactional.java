@@ -13,9 +13,9 @@ import java.util.List;
 /**
  * Created by Exidnus on 09.01.2016.
  */
-@Repository
+//@Repository
 //@Primary
-@Transactional
+//@Transactional
 public class PersonRepostoryHibernateTransactional extends HibernateDaoSupport implements PersonRepository {
     @Override
     public void addPerson(Person person) {
@@ -31,5 +31,10 @@ public class PersonRepostoryHibernateTransactional extends HibernateDaoSupport i
     @Autowired
     public void setupSessionFactory(SessionFactory sessionFactory) {
         setSessionFactory(sessionFactory);
+    }
+
+    @Override
+    public void deletePersonById(int id) {
+
     }
 }

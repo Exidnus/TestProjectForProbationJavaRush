@@ -37,7 +37,8 @@ public class PersonController {
         return "addperson";
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    //TODO создание TimeStamp здесь - правильно ли? Пожалуй, нужно как-то переделать
+    @RequestMapping(value = "/adding", method = RequestMethod.POST)
     public String addPersonAndGoToPersonList(Model model, @RequestParam(value = "name") String name,
                                              @RequestParam(value = "age") int age,
                                              @RequestParam(value = "isAdmin") String isAdminStr) {
@@ -48,7 +49,17 @@ public class PersonController {
         } catch (UnsupportedEncodingException ignored) {}
         Person person = new Person(rightName, age, new Timestamp(new Date().getTime()), isAdmin);
         personRepository.addPerson(person);
-        model.addAttribute("personsList", personRepository.getAll());
-        return "persons";
+        return "redirect:/people";
+    }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public String goToSearchByName() {
+        return "searchbyname";
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public String something(@RequestParam(value = "id") int id) {
+        personRepository.deletePersonById(id);
+        return "redirect:/people";
     }
 }
