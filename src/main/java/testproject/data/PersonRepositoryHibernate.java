@@ -2,6 +2,7 @@ package testproject.data;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -64,5 +65,20 @@ public class PersonRepositoryHibernate implements PersonRepository {
                 session.close();
             }
         }
+    }
+
+    @Override
+    public List<Person> findByName(String name) {
+        List<Person> result = null;
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            result = session.createCriteria(Person.class).add(Restrictions.eq("name", name)).list();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return result;
     }
 }

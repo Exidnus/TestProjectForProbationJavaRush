@@ -1,5 +1,6 @@
 package testproject.data;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import testproject.Person;
 
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * Created by Exidnus on 06.01.2016.
  */
-@Repository
+@Repository //@Primary
 public class PersonRepositoryListSimpleImpl implements PersonRepository {
     private List<Person> persons;
 
@@ -21,6 +22,7 @@ public class PersonRepositoryListSimpleImpl implements PersonRepository {
         persons.add(new Person("Вася", 25, new Timestamp(new Date().getTime()), false));
         persons.add(new Person("Петя", 38, new Timestamp(new Date().getTime()), true));
         persons.add(new Person("Людмила", 18, new Timestamp(new Date().getTime()), false));
+        persons.add(new Person("Vernon", 25, new Timestamp(new Date().getTime()), true));
     }
 
     @Override
@@ -39,5 +41,14 @@ public class PersonRepositoryListSimpleImpl implements PersonRepository {
         while(iterator.hasNext()) {
             Person person = iterator.next();
         }
+    }
+
+    @Override
+    public List<Person> findByName(String name) {
+        List<Person> result = new ArrayList<>();
+        for (Person person : persons) {
+            if (person.getName().equals(name)) result.add(person);
+        }
+        return result;
     }
 }

@@ -11,5 +11,6 @@ public interface PersonRepository {
     List<Person> getAll();
     void addPerson(Person person);
     void deletePersonById(int id);
+    List<Person> findByName(String name);
     //TODO методы для удаления и изменения, возможно, для пейджинга
 }

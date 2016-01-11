@@ -45,7 +45,12 @@ public class PersonControllerTest {
                 .andExpect(MockMvcResultMatchers.view().name("addperson"));
     }
 
-    //Как я понимаю, не самый лучший тест
+    /*
+    Как я пониманию, не самый лучший тест
+    Если убрать строчку mockRepository.addPerson(personForAdding);
+    то для прохождения теста в методе equals класса Person нужно убрать сравнение по createdDate
+    Видимо, неправильна сама идея создавать createdDate в контроллере
+     */
     @Test
     public void shouldAddPerson() throws Exception {
         PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
@@ -72,7 +77,12 @@ public class PersonControllerTest {
                 .andExpect(MockMvcResultMatchers.view().name("searchbyname"));
     }
 
-    @Test @Ignore
+    @Test
+    public void shouldGetResultOfSearchAndGoToSearchByName() throws Exception {
+
+    }
+
+    @Test
     public void shouldDeleteAndGoToPersonsList() throws Exception {
         PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
         PersonController controller = new PersonController(mockRepository);

@@ -11,7 +11,9 @@ import testproject.data.PersonRepository;
 
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Exidnus on 06.01.2016.
@@ -37,7 +39,6 @@ public class PersonController {
         return "addperson";
     }
 
-    //TODO создание TimeStamp здесь - правильно ли? Пожалуй, нужно как-то переделать
     @RequestMapping(value = "/adding", method = RequestMethod.POST)
     public String addPersonAndGoToPersonList(Model model, @RequestParam(value = "name") String name,
                                              @RequestParam(value = "age") int age,
@@ -57,8 +58,18 @@ public class PersonController {
         return "searchbyname";
     }
 
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public String getResultOfSearch(Model model, @RequestParam(value = "name") String name) {
+        String rightName = null;
+        try {
+            rightName = new String(name.getBytes("ISO8859-1"), "UTF-8"); //TODO Должен быть другой способ?
+        } catch (UnsupportedEncodingException ignored) {}
+        model.addAttribute("personsList", personRepository.findByName(rightName));
+        return "searchbyname";
+    }
+
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public String something(@RequestParam(value = "id") int id) {
+    public String deletePersonById(@RequestParam(value = "id") int id) {
         personRepository.deletePersonById(id);
         return "redirect:/people";
     }

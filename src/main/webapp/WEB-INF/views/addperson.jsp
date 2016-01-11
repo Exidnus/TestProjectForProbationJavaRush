@@ -15,7 +15,7 @@
             Админ: <br/>
             <input type="radio" name="isAdmin" value="yes" />Да<br/>
             <input type="radio" name="isAdmin" value="no" />Нет<br/>
-            <input type="Submit" value="Добавить" />
+            <input type="SUBMIT" value="Добавить" />
         </form>
     </body>
 </html>
