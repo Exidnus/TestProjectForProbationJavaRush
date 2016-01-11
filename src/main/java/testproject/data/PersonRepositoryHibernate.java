@@ -2,6 +2,7 @@ package testproject.data;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -80,5 +81,36 @@ public class PersonRepositoryHibernate implements PersonRepository {
             }
         }
         return result;
+    }
+
+    @Override
+    public int getCount() {
+        int i = 0;
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            i = (int) session.createCriteria(Person.class)
+                    .setProjection(Projections.countDistinct("id")).uniqueResult();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return i;
+    }
+
+    @Override
+    public Person getPersonById(int id) {
+        Person person = null;
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            person = session.get(Person.class, id);
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return person;
     }
 }

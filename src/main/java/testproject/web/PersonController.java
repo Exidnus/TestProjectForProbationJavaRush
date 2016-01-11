@@ -40,15 +40,12 @@ public class PersonController {
     }
 
     @RequestMapping(value = "/adding", method = RequestMethod.POST)
-    public String addPersonAndGoToPersonList(Model model, @RequestParam(value = "name") String name,
+    public String addPersonAndGoToPersonList(@RequestParam(value = "name") String name,
                                              @RequestParam(value = "age") int age,
                                              @RequestParam(value = "isAdmin") String isAdminStr) {
-        boolean isAdmin = isAdminStr.equals("yes") ? true : false;
-        String rightName = null;
-        try {
-            rightName = new String(name.getBytes("ISO8859-1"), "UTF-8"); //TODO Должен быть другой способ?
-        } catch (UnsupportedEncodingException ignored) {}
-        Person person = new Person(rightName, age, new Timestamp(new Date().getTime()), isAdmin);
+        boolean isAdmin = isAdminStr.equals("yes");
+        name = encodeFromISO8859_1ToUTF8(name);
+        Person person = new Person(name, age, new Timestamp(new Date().getTime()), isAdmin);
         personRepository.addPerson(person);
         return "redirect:/people";
     }
@@ -60,11 +57,8 @@ public class PersonController {
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String getResultOfSearch(Model model, @RequestParam(value = "name") String name) {
-        String rightName = null;
-        try {
-            rightName = new String(name.getBytes("ISO8859-1"), "UTF-8"); //TODO Должен быть другой способ?
-        } catch (UnsupportedEncodingException ignored) {}
-        model.addAttribute("personsList", personRepository.findByName(rightName));
+        name = encodeFromISO8859_1ToUTF8(name);
+        model.addAttribute("personsList", personRepository.findByName(name));
         return "searchbyname";
     }
 
@@ -72,5 +66,13 @@ public class PersonController {
     public String deletePersonById(@RequestParam(value = "id") int id) {
         personRepository.deletePersonById(id);
         return "redirect:/people";
+    }
+
+    private String encodeFromISO8859_1ToUTF8(String name) {
+        String rightName = null;
+        try {
+            rightName = new String(name.getBytes("ISO8859-1"), "UTF-8");
+        } catch (UnsupportedEncodingException ignored) {}
+        return rightName;
     }
 }

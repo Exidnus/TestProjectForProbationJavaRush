@@ -51,4 +51,17 @@ public class PersonRepositoryListSimpleImpl implements PersonRepository {
         }
         return result;
     }
+
+    @Override
+    public int getCount() {
+        return persons.size();
+    }
+
+    @Override
+    public Person getPersonById(int id) {
+        for (Person person : persons) {
+            if (person.getId() == id) return person;
+        }
+        return null;
+    }
 }

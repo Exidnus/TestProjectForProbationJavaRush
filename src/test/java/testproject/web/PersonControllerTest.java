@@ -77,9 +77,22 @@ public class PersonControllerTest {
                 .andExpect(MockMvcResultMatchers.view().name("searchbyname"));
     }
 
-    @Test
+    @Test //Тест зависит от кодировок: для прохождения тестов нужно использовать person с имененм на английском
     public void shouldGetResultOfSearchAndGoToSearchByName() throws Exception {
+        PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
+        PersonController controller = new PersonController(mockRepository);
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        List<Person> persons = createPersonsList();
+        List<Person> fakeResultOfSearch = new ArrayList<>();
+        fakeResultOfSearch.add(persons.get(0));
+        Mockito.when(mockRepository.findByName(fakeResultOfSearch.get(0).getName())).thenReturn(fakeResultOfSearch);
 
+        mockMvc.perform(MockMvcRequestBuilders.post("/people/search")
+                .param("name", fakeResultOfSearch.get(0).getName()))
+                .andExpect(MockMvcResultMatchers.view().name("searchbyname"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("personsList"))
+                .andExpect(MockMvcResultMatchers.model().attribute("personsList", fakeResultOfSearch));
+        Mockito.verify(mockRepository, Mockito.atLeastOnce()).findByName(fakeResultOfSearch.get(0).getName());
     }
 
     @Test
@@ -94,7 +107,7 @@ public class PersonControllerTest {
 
     private List<Person> createPersonsList() {
         List<Person> persons = new ArrayList<>();
-        persons.add(new Person("Вася", 25, new Timestamp(new Date().getTime()), false));
+        persons.add(new Person("Dima", 25, new Timestamp(new Date().getTime()), false));
         persons.add(new Person("Петя", 38, new Timestamp(new Date().getTime()), true));
         persons.add(new Person("Людмила", 18, new Timestamp(new Date().getTime()), false));
         return persons;

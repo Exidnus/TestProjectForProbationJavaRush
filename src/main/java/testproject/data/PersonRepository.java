@@ -12,5 +12,7 @@ public interface PersonRepository {
     void addPerson(Person person);
     void deletePersonById(int id);
     List<Person> findByName(String name);
+    int getCount();
+    Person getPersonById(int id);
     //TODO методы для удаления и изменения, возможно, для пейджинга
 }
