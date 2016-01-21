@@ -113,4 +113,19 @@ public class PersonRepositoryHibernate implements PersonRepository {
         }
         return person;
     }
+
+    @Override
+    public void update(Person person) {
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.update(person);
+            session.getTransaction().commit();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+    }
 }

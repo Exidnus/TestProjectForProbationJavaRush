@@ -1,8 +1,7 @@
 package testproject.web;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
@@ -12,9 +11,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import testproject.Person;
 import testproject.data.PersonRepository;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,7 +34,7 @@ public class PersonControllerTest {
     }
 
     @Test
-    public void shouldGoToAddPersonpage() throws Exception {
+    public void shouldGoToAddPersonPage() throws Exception {
         PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
         PersonController controller = new PersonController(mockRepository);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
@@ -46,26 +43,28 @@ public class PersonControllerTest {
     }
 
     /*
-    Как я пониманию, не самый лучший тест
-    Если убрать строчку mockRepository.addPerson(personForAdding);
-    то для прохождения теста в методе equals класса Person нужно убрать сравнение по createdDate
-    Видимо, неправильна сама идея создавать createdDate в контроллере
+    Закомментированная строка была нужна для прохождения теста, когда equals и hashcode
+    в классе Person были реализованы не с помощью поля id. Проблемы были с различием Timestamp, возможно,
+    Timestamp нужно создавать в другом месте?
+    Как я понимаю, с закомментированной строкой тест был не самым лучшим.
+    Оставил закомментированную строку на всякий случай: возможно, equals и hashcode
+    в классе Person нужно реализовать иначе.
      */
     @Test
     public void shouldAddPerson() throws Exception {
         PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
-        Person personForAdding = Mockito.mock(Person.class);
-        mockRepository.addPerson(personForAdding);
+        Person person = new Person("Dima", 25, false);
+        //mockRepository.addPerson(person);
 
         PersonController personController = new PersonController(mockRepository);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
         mockMvc.perform(MockMvcRequestBuilders.post("/people/adding")
-                .param("name", "Дима")
-                .param("age", String.valueOf(25))
-                .param("isAdmin", "yes"))
+                .param("name", person.getName())
+                .param("age", String.valueOf(person.getAge()))
+                .param("isAdmin", person.isAdmin() ? "yes" : "no"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
 
-        Mockito.verify(mockRepository, Mockito.atLeastOnce()).addPerson(personForAdding);
+        Mockito.verify(mockRepository, Mockito.atLeastOnce()).addPerson(person);
     }
 
     @Test
@@ -77,7 +76,12 @@ public class PersonControllerTest {
                 .andExpect(MockMvcResultMatchers.view().name("searchbyname"));
     }
 
-    @Test //Тест зависит от кодировок: для прохождения тестов нужно использовать person с имененм на английском
+    /*
+    !!!
+    Тест зависит от кодировок: для прохождения теста
+    нужно использовать person с имененм на английском.
+     */
+    @Test
     public void shouldGetResultOfSearchAndGoToSearchByName() throws Exception {
         PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
         PersonController controller = new PersonController(mockRepository);
@@ -105,11 +109,57 @@ public class PersonControllerTest {
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
     }
 
+    @Test
+    public void shouldGoToChangePersonPageWithPerson() throws Exception {
+        PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
+        PersonController controller = new PersonController(mockRepository);
+        Person person = createPersonsList().get(1);
+        Mockito.when(mockRepository.getPersonById(1)).thenReturn(person);
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc.perform(MockMvcRequestBuilders.post("/people/change")
+                .param("id", "1"))
+                .andExpect(MockMvcResultMatchers.view().name("changeperson"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("person"))
+                .andExpect(MockMvcResultMatchers.model().attribute("person", person));
+    }
+
+    /*
+    TODO Не самый лучший тест из-за реализации equals в классе Person, надо что-то с этим сделать
+     */
+
+    @Test
+    public void shouldChangePersonAndGoToPersonsList() throws Exception {
+        PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
+        PersonController personController = new PersonController(mockRepository);
+        Person person = createPersonsList().get(0);
+        person.setId(0);
+        Mockito.when(mockRepository.getPersonById(0)).thenReturn(person);
+
+        Person changedPerson = new Person();
+        changedPerson.setId(0);
+        person.setName("Semen");
+        person.setAge(30);
+        person.setCreatedDate(person.getCreatedDate());
+        changedPerson.setAdmin(true);
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
+        mockMvc.perform(MockMvcRequestBuilders.post("/people/performchange")
+                .param("id", String.valueOf(0))
+                .param("name", "Semen")
+                .param("age", String.valueOf(30))
+                .param("isAdmin", "yes"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
+
+        Assert.assertEquals(person, changedPerson);
+        Mockito.verify(mockRepository, Mockito.atLeastOnce()).update(person);
+    }
+
     private List<Person> createPersonsList() {
         List<Person> persons = new ArrayList<>();
-        persons.add(new Person("Dima", 25, new Timestamp(new Date().getTime()), false));
-        persons.add(new Person("Петя", 38, new Timestamp(new Date().getTime()), true));
-        persons.add(new Person("Людмила", 18, new Timestamp(new Date().getTime()), false));
+        persons.add(new Person("Dima", 25, false));
+        persons.add(new Person("Petia", 38, true));
+        persons.add(new Person("Людмила", 18, false));
         return persons;
     }
 }

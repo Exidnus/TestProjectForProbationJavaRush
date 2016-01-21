@@ -21,6 +21,9 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/people")
 public class PersonController {
+    private int currentPosition = 0;
+    private int amount = 10; //Количество записей на странице
+
     private PersonRepository personRepository;
 
     @Autowired
@@ -40,12 +43,12 @@ public class PersonController {
     }
 
     @RequestMapping(value = "/adding", method = RequestMethod.POST)
-    public String addPersonAndGoToPersonList(@RequestParam(value = "name") String name,
-                                             @RequestParam(value = "age") int age,
+    public String addPersonAndGoToPersonList(@RequestParam String name,
+                                             @RequestParam int age,
                                              @RequestParam(value = "isAdmin") String isAdminStr) {
         boolean isAdmin = isAdminStr.equals("yes");
         name = encodeFromISO8859_1ToUTF8(name);
-        Person person = new Person(name, age, new Timestamp(new Date().getTime()), isAdmin);
+        Person person = new Person(name, age, isAdmin);
         personRepository.addPerson(person);
         return "redirect:/people";
     }
@@ -56,15 +59,35 @@ public class PersonController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public String getResultOfSearch(Model model, @RequestParam(value = "name") String name) {
+    public String getResultOfSearch(Model model, @RequestParam String name) {
         name = encodeFromISO8859_1ToUTF8(name);
         model.addAttribute("personsList", personRepository.findByName(name));
         return "searchbyname";
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public String deletePersonById(@RequestParam(value = "id") int id) {
+    public String deletePersonById(@RequestParam int id) {
         personRepository.deletePersonById(id);
+        return "redirect:/people";
+    }
+
+    @RequestMapping(value = "/change", method = RequestMethod.POST)
+    public String goToChangePersonWithPersonId(Model model, @RequestParam int id) {
+        model.addAttribute("person", personRepository.getPersonById(id));
+        return "changeperson";
+    }
+
+    @RequestMapping(value = "/performchange", method = RequestMethod.POST)
+    public String changePersonAndGoToPersonsList(@RequestParam int id, @RequestParam String name,
+                                                 @RequestParam int age,
+                                                 @RequestParam(value = "isAdmin") String isAdminStr) {
+        boolean isAdmin = isAdminStr.equals("yes");
+        name = encodeFromISO8859_1ToUTF8(name);
+        Person person = personRepository.getPersonById(id);
+        person.setName(name);
+        person.setAge(age);
+        person.setAdmin(isAdmin);
+        personRepository.update(person);
         return "redirect:/people";
     }
 

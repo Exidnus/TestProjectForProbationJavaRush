@@ -19,10 +19,10 @@ public class PersonRepositoryListSimpleImpl implements PersonRepository {
 
     public PersonRepositoryListSimpleImpl() {
         persons = new ArrayList<>();
-        persons.add(new Person("Вася", 25, new Timestamp(new Date().getTime()), false));
-        persons.add(new Person("Петя", 38, new Timestamp(new Date().getTime()), true));
-        persons.add(new Person("Людмила", 18, new Timestamp(new Date().getTime()), false));
-        persons.add(new Person("Vernon", 25, new Timestamp(new Date().getTime()), true));
+        persons.add(new Person("Вася", 25, false));
+        persons.add(new Person("Петя", 38, true));
+        persons.add(new Person("Людмила", 18, false));
+        persons.add(new Person("Vernon", 25, true));
     }
 
     @Override
@@ -63,5 +63,10 @@ public class PersonRepositoryListSimpleImpl implements PersonRepository {
             if (person.getId() == id) return person;
         }
         return null;
+    }
+
+    @Override
+    public void update(Person person) {
+
     }
 }

@@ -19,7 +19,9 @@ import java.util.Date;
 public class Person {
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
     @Id
-    //TODO разобраться, почему изменение или отсутствие стратегии приводит к ошибке (без Spring'a ее не было)
+    //TODO разобраться, почему изменение или отсутствие стратегии приводило к ошибке (без Spring'a ее не было)
+    //Сейчас ошибки нет
+    //А сейчас опять появилась, короче, надо разобраться
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
@@ -32,15 +34,11 @@ public class Person {
 
     public Person() {}
 
-    public Person(String name, int age, Timestamp createdDate, boolean isAdmin) {
+    public Person(String name, int age, boolean isAdmin) {
         this.age = age;
-        this.createdDate = createdDate;
+        this.createdDate = new Timestamp(new Date().getTime());
         this.isAdmin = isAdmin;
         this.name = name;
-    }
-
-    public Person(String name, int age, Timestamp createdDate) {
-        this(name, age, createdDate, false);
     }
 
     public int getAge() {
@@ -87,11 +85,14 @@ public class Person {
         return simpleDateFormat.format(createdDate);
     }
 
+    /*
+    В документации к Hibernate настойчиво рекомендуется
+    реализовывать equals и hashcode на основе id, что я и сделал
+     */
+
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id).append(name).append(age)
-                .append(createdDate).append(isAdmin).toHashCode();
+        return new HashCodeBuilder(17, 37).append(id).toHashCode();
     }
 
     @Override
@@ -101,9 +102,7 @@ public class Person {
         if (obj.getClass() != this.getClass()) return false;
 
         Person that = (Person) obj;
-        return new EqualsBuilder().append(this.name, that.name)
-                .append(this.age, that.age).append(this.createdDate, that.createdDate)
-                .append(this.isAdmin, that.isAdmin).isEquals();
+        return new EqualsBuilder().append(this.id, that.id).isEquals();
     }
 
     @Override

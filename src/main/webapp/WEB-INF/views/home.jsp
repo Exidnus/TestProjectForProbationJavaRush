@@ -14,8 +14,11 @@
             <h1>Здравствуйте!</h1>
             <h2>Проекты:</h2>
             <p>
-            <a href="<c:url value="/people" />">Список людей</a> с возможностью удаления,
-            добавления и изменения записей Spring MVC
+                <a href="<c:url value="/people" />">Список людей</a> с возможностью удаления,
+                добавления и изменения записей Spring MVC
+            </p>
+            <p>
+                <a href="<c:url value="/peoplevaadin" />">Vaadin test:</a> пока просто тест
             </p>
         </div>
     </body>

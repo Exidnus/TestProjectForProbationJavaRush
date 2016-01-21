@@ -32,6 +32,12 @@
                     <input type="Submit" value="Удалить" />
                 </form>
                 </td>
+                <td>
+                <form method="POST" action="<c:url value="/people/change" />" >
+                    <input type="hidden" name="id" value="${person.id}" />
+                    <input type="submit" value="Изменить" />
+                </form>
+                </td>
                 </tr>
             </c:forEach>
         </table>

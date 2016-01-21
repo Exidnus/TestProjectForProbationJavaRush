@@ -11,7 +11,8 @@
         <div class="basic">
             <h1>Список людей</h1>
             <table>
-                <tr><td>Имя</td><td>Возраст</td><td>Дата регистрации</td><td>Админ</td><td>Удаление</td></tr>
+                <tr><td>Имя</td><td>Возраст</td><td>Дата регистрации</td>
+                    <td>Админ</td><td>Удаление</td><td>Изменение</td></tr>
                 <c:forEach items="${personsList}" var="person">
                     <tr>
                     <td><c:out value="${person.name}" /></td>
@@ -26,7 +27,13 @@
                     <td>
                     <form method="POST" action="<c:url value="/people/delete" />" >
                         <input type="hidden" name="id" value="${person.id}" />
-                        <input type="Submit" value="Удалить" />
+                        <input type="submit" value="Удалить" />
+                    </form>
+                    </td>
+                    <td>
+                    <form method="POST" action="<c:url value="/people/change" />" >
+                        <input type="hidden" name="id" value="${person.id}" />
+                        <input type="submit" value="Изменить" />
                     </form>
                     </td>
                     </tr>
