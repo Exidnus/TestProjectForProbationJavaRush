@@ -2,12 +2,13 @@ package testproject.data;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import testproject.Person;
+import testproject.domain.Person;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class PersonRepositoryHibernate implements PersonRepository {
         List<Person> persons = new ArrayList<>();
         try {
             session = sessionFactory.openSession();
-            persons = session.createCriteria(Person.class).list();
+            persons = session.createCriteria(Person.class).addOrder(Order.asc("name")).list();
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();

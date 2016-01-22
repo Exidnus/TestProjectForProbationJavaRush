@@ -1,6 +1,6 @@
 package testproject.data;
 
-import testproject.Person;
+import testproject.domain.Person;
 
 import java.util.List;
 

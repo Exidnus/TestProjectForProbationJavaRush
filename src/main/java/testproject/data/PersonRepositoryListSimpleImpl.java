@@ -1,17 +1,15 @@
 package testproject.data;
 
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import testproject.Person;
+import testproject.domain.Person;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by Exidnus on 06.01.2016.
+ * Класс для тестирования
  */
 @Repository //@Primary
 public class PersonRepositoryListSimpleImpl implements PersonRepository {
@@ -40,6 +38,7 @@ public class PersonRepositoryListSimpleImpl implements PersonRepository {
         Iterator<Person> iterator = persons.iterator();
         while(iterator.hasNext()) {
             Person person = iterator.next();
+            if (person.getId() == id) iterator.remove();
         }
     }
 

@@ -90,8 +90,8 @@
             <version>5.2.2.Final</version>
         </dependency>
 
-
         <!-- test -->
+        
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -134,7 +134,22 @@
             <version>${vaadin.version}</version>
         </dependency>
 
+        <!-- Для интеграции Spring и Vaadin -->
+
+        <dependency>
+            <groupId>ru.xpoft.vaadin</groupId>
+            <artifactId>spring-vaadin-integration</artifactId>
+            <version>3.2</version>
+        </dependency>
+
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>vaadin-addons</id>
+            <url>http://maven.vaadin.com/vaadin-addons</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>

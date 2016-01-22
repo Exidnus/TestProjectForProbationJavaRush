@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
 
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -18,7 +19,8 @@
                 добавления и изменения записей Spring MVC
             </p>
             <p>
-                <a href="<c:url value="/peoplevaadin" />">Vaadin test:</a> пока просто тест
+                <a href="<c:url value="/peoplevaadin" />">Vaadin test:</a> пока просто тест, буду постепенно
+                добавлять функциональность
             </p>
         </div>
     </body>
