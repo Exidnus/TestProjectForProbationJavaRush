@@ -29,8 +29,21 @@ public class PersonController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String goToPersonsList(Model model) {
-        model.addAttribute("personsList", personRepository.getAll());
+        model.addAttribute("personsList", personRepository.getPage(currentPosition, amount));
+        //model.addAttribute("personsList", personRepository.getAll()); // Без пейджинга
         return "persons";
+    }
+
+    @RequestMapping(value = "/previous", method = RequestMethod.GET)
+    public String goToPreviousPage() {
+        if (currentPosition > 0) currentPosition -= amount;
+        return "redirect:/people";
+    }
+
+    @RequestMapping(value = "/next", method = RequestMethod.GET)
+    public String goToNextPage() {
+        if (currentPosition + amount < personRepository.getCount()) currentPosition += amount;
+        return "redirect:/people";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)

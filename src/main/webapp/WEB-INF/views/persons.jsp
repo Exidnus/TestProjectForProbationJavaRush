@@ -39,6 +39,14 @@
                     </tr>
                 </c:forEach>
             </table>
+            <p>
+            <form method="GET" action="<c:url value="/people/previous" />" >
+                <input type="submit" value="Предыдущая страница" />
+            </form>
+            <form method="GET" action="<c:url value="/people/next" />" >
+                <input type="submit" value="Следующая страница" />
+            </form>
+            </p>
             <p><a href="<c:url value="/people/add" />">Добавить человека</a></p>
             <p><a href="<c:url value="/people/search" />">Поиск по имени</a></p>
             <p><a href="<c:url value="/homepage" />">Вернуться к списку проектов</a></p>

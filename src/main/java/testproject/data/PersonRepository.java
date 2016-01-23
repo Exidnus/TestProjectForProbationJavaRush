@@ -9,10 +9,11 @@ import java.util.List;
  */
 public interface PersonRepository {
     List<Person> getAll();
+    List<Person> getPage(int first, int amout);
     void addPerson(Person person);
     void deletePersonById(int id);
     List<Person> findByName(String name);
-    int getCount();
+    long getCount();
     Person getPersonById(int id);
     void update(Person person);
     //TODO методы для удаления и изменения, возможно, для пейджинга

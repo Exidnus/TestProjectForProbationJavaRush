@@ -2,6 +2,7 @@ package testproject.web;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,11 +19,19 @@ import java.util.List;
  * Created by Exidnus on 06.01.2016.
  */
 public class PersonControllerTest {
+    private List<Person> persons = new ArrayList<>();
+
+    @Before
+    public void fillList() {
+        persons.add(new Person("Dima", 25, false));
+        persons.add(new Person("Petia", 38, true));
+        persons.add(new Person("Людмила", 18, false));
+    }
+
     @Test
     public void shouldGoToPersonsPage() throws Exception {
-        List<Person> persons = createPersonsList();
         PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
-        Mockito.when(mockRepository.getAll()).thenReturn(persons);
+        Mockito.when(mockRepository.getPage(0, 10)).thenReturn(persons);
 
         PersonController controller = new PersonController(mockRepository);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
@@ -31,6 +40,28 @@ public class PersonControllerTest {
                 .andExpect(MockMvcResultMatchers.model().attributeExists("personsList"))
                 .andExpect(MockMvcResultMatchers.model().attribute("personsList",
                         Matchers.hasItems(persons.toArray())));
+    }
+
+    @Test
+    public void shouldGoToPrevoiusPage() throws Exception {
+        PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
+        Mockito.when(mockRepository.getAll()).thenReturn(persons);
+
+        PersonController controller = new PersonController(mockRepository);
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc.perform(MockMvcRequestBuilders.get("/people/previous"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
+    }
+
+    @Test
+    public void shouldGoToNextPage() throws Exception {
+        PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
+        Mockito.when(mockRepository.getAll()).thenReturn(persons);
+
+        PersonController controller = new PersonController(mockRepository);
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc.perform(MockMvcRequestBuilders.get("/people/next"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
     }
 
     @Test
@@ -53,7 +84,7 @@ public class PersonControllerTest {
     @Test
     public void shouldAddPerson() throws Exception {
         PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
-        Person person = new Person("Dima", 25, false);
+        Person person = persons.get(0);
         //mockRepository.addPerson(person);
 
         PersonController personController = new PersonController(mockRepository);
@@ -86,7 +117,6 @@ public class PersonControllerTest {
         PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
         PersonController controller = new PersonController(mockRepository);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-        List<Person> persons = createPersonsList();
         List<Person> fakeResultOfSearch = new ArrayList<>();
         fakeResultOfSearch.add(persons.get(0));
         Mockito.when(mockRepository.findByName(fakeResultOfSearch.get(0).getName())).thenReturn(fakeResultOfSearch);
@@ -113,7 +143,7 @@ public class PersonControllerTest {
     public void shouldGoToChangePersonPageWithPerson() throws Exception {
         PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
         PersonController controller = new PersonController(mockRepository);
-        Person person = createPersonsList().get(1);
+        Person person = persons.get(1);
         Mockito.when(mockRepository.getPersonById(1)).thenReturn(person);
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
@@ -132,7 +162,7 @@ public class PersonControllerTest {
     public void shouldChangePersonAndGoToPersonsList() throws Exception {
         PersonRepository mockRepository = Mockito.mock(PersonRepository.class);
         PersonController personController = new PersonController(mockRepository);
-        Person person = createPersonsList().get(0);
+        Person person = persons.get(0);
         person.setId(0);
         Mockito.when(mockRepository.getPersonById(0)).thenReturn(person);
 
@@ -153,13 +183,5 @@ public class PersonControllerTest {
 
         Assert.assertEquals(person, changedPerson);
         Mockito.verify(mockRepository, Mockito.atLeastOnce()).update(person);
-    }
-
-    private List<Person> createPersonsList() {
-        List<Person> persons = new ArrayList<>();
-        persons.add(new Person("Dima", 25, false));
-        persons.add(new Person("Petia", 38, true));
-        persons.add(new Person("Людмила", 18, false));
-        return persons;
     }
 }

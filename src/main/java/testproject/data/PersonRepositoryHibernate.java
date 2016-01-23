@@ -42,6 +42,20 @@ public class PersonRepositoryHibernate implements PersonRepository {
     }
 
     @Override
+    public List<Person> getPage(int first, int amount) {
+        Session session = null;
+        List<Person> persons = new ArrayList<>();
+        try {
+            session = sessionFactory.openSession();
+            persons = session.createCriteria(Person.class).addOrder(Order.asc("name"))
+                    .setFirstResult(first).setMaxResults(amount).list();
+        } finally {
+            if (session != null && session.isOpen()) session.close();
+        }
+        return persons;
+    }
+
+    @Override
     public void addPerson(Person person) {
         Session session = null;
         try {
@@ -85,12 +99,12 @@ public class PersonRepositoryHibernate implements PersonRepository {
     }
 
     @Override
-    public int getCount() {
-        int i = 0;
+    public long getCount() {
+        long i = 0;
         Session session = null;
         try {
             session = sessionFactory.openSession();
-            i = (int) session.createCriteria(Person.class)
+            i = (long) session.createCriteria(Person.class)
                     .setProjection(Projections.countDistinct("id")).uniqueResult();
         } finally {
             if (session != null && session.isOpen()) {

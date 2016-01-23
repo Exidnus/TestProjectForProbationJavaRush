@@ -29,6 +29,11 @@ public class PersonRepositoryListSimpleImpl implements PersonRepository {
     }
 
     @Override
+    public List<Person> getPage(int first, int amount) {
+        return persons.subList(first, first + amount);
+    }
+
+    @Override
     public void addPerson(Person person) {
         persons.add(person);
     }
@@ -52,7 +57,7 @@ public class PersonRepositoryListSimpleImpl implements PersonRepository {
     }
 
     @Override
-    public int getCount() {
+    public long getCount() {
         return persons.size();
     }
 
