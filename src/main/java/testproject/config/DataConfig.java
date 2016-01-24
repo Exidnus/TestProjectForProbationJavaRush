@@ -3,6 +3,8 @@ package testproject.config;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -15,4 +17,9 @@ public class DataConfig {
     public SessionFactory sessionFactory() {
         return new Configuration().configure().buildSessionFactory();
     }
+
+    /*@Bean
+    public PlatformTransactionManager platformTransactionManager(SessionFactory sessionFactory) {
+        return new HibernateTransactionManager(sessionFactory);
+    }*/
 }

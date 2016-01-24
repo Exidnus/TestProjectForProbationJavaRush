@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface PersonRepository {
     List<Person> getAll();
-    List<Person> getPage(int first, int amout);
+    List<Person> getPage(int offset, int length);
     void addPerson(Person person);
     void deletePersonById(int id);
     List<Person> findByName(String name);

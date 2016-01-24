@@ -18,7 +18,7 @@ import java.io.UnsupportedEncodingException;
 @RequestMapping(value = "/people")
 public class PersonController {
     private int currentPosition = 0;
-    private int amount = 10; //Количество записей на странице
+    private int length = 10; //Количество записей на странице
 
     private PersonRepository personRepository;
 
@@ -29,20 +29,20 @@ public class PersonController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String goToPersonsList(Model model) {
-        model.addAttribute("personsList", personRepository.getPage(currentPosition, amount));
+        model.addAttribute("personsList", personRepository.getPage(currentPosition, length));
         //model.addAttribute("personsList", personRepository.getAll()); // Без пейджинга
         return "persons";
     }
 
     @RequestMapping(value = "/previous", method = RequestMethod.GET)
     public String goToPreviousPage() {
-        if (currentPosition > 0) currentPosition -= amount;
+        if (currentPosition > 0) currentPosition -= length;
         return "redirect:/people";
     }
 
     @RequestMapping(value = "/next", method = RequestMethod.GET)
     public String goToNextPage() {
-        if (currentPosition + amount < personRepository.getCount()) currentPosition += amount;
+        if (currentPosition + length < personRepository.getCount()) currentPosition += length;
         return "redirect:/people";
     }
 

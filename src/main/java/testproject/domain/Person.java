@@ -30,13 +30,13 @@ public class Person {
     @Type(type="org.hibernate.type.NumericBooleanType")
     private boolean isAdmin;
     @Column(name="created_date")
-    private Timestamp createdDate;
+    private Date createdDate;
 
     public Person() {}
 
     public Person(String name, int age, boolean isAdmin) {
         this.age = age;
-        this.createdDate = new Timestamp(new Date().getTime());
+        this.createdDate = new Date();
         this.isAdmin = isAdmin;
         this.name = name;
     }
@@ -49,11 +49,11 @@ public class Person {
         this.age = age;
     }
 
-    public Timestamp getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Timestamp createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 

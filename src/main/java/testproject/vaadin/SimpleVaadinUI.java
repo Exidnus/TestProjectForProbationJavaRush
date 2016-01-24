@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by Exidnus on 20.01.2016.
  */
-@Title("Hello World Simple Example")
+@Title("Список людей CrUD Vaadin")
 @Theme("valo")
 @org.springframework.stereotype.Component("SimpleVaadinUI")
 @Scope("prototype")
@@ -26,7 +26,15 @@ public class SimpleVaadinUI extends UI {
 
     Grid personsGrid = new Grid();
     Link goToHomePage = new Link("Вернуться к списку проектов", new ExternalResource("homepage"));
+    TextField filter = new TextField();
+    Button newPerson = new Button("Добавить человека");
+    PersonForm personForm = new PersonForm();
+
     private PersonRepository personRepository;
+
+    public PersonRepository getPersonRepository() {
+        return personRepository;
+    }
 
     @Autowired
     public void setPersonRepository(PersonRepository personRepository) {
@@ -40,6 +48,10 @@ public class SimpleVaadinUI extends UI {
     }
 
     private void configureComponents() {
+        filter.setInputPrompt("Фильтр по имени");
+        newPerson.addClickListener(clickEvent -> personForm.edit(new Person()));
+        //personsGrid.addSelectionListener(clickEvent -> personForm.edit((Person) personsGrid.getSelectedRow()));
+
         personsGrid.setColumns("Имя", "Возраст", "Админ", "Дата создания");
         List<Person> persons = personRepository.getAll();
         for (Person p : persons) {
@@ -48,12 +60,23 @@ public class SimpleVaadinUI extends UI {
     }
 
     private void buildLayouts() {
-        personsGrid.setSizeFull();
+        HorizontalLayout actions = new HorizontalLayout(filter, newPerson);
+        actions.setWidth("100%");
+        filter.setWidth("100%");
+        actions.setExpandRatio(filter, 1);
 
-        VerticalLayout main = new VerticalLayout();
-        main.addComponent(personsGrid);
-        main.addComponent(goToHomePage);
+        VerticalLayout center = new VerticalLayout(actions, personsGrid, goToHomePage);
+        center.setSizeFull();
+        personsGrid.setSizeFull();
+        center.setExpandRatio(personsGrid, 1);
+        center.setComponentAlignment(goToHomePage, Alignment.BOTTOM_CENTER);
+
+        HorizontalLayout main = new HorizontalLayout(center, personForm);
+        main.setSizeFull();
+        main.setExpandRatio(center, 1);
 
         setContent(main);
     }
+
+
 }

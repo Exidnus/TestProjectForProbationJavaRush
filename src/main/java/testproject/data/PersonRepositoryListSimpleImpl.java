@@ -29,8 +29,8 @@ public class PersonRepositoryListSimpleImpl implements PersonRepository {
     }
 
     @Override
-    public List<Person> getPage(int first, int amount) {
-        return persons.subList(first, first + amount);
+    public List<Person> getPage(int offset, int length) {
+        return persons.subList(offset, offset + length);
     }
 
     @Override

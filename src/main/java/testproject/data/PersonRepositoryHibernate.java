@@ -42,13 +42,13 @@ public class PersonRepositoryHibernate implements PersonRepository {
     }
 
     @Override
-    public List<Person> getPage(int first, int amount) {
+    public List<Person> getPage(int offset, int length) {
         Session session = null;
         List<Person> persons = new ArrayList<>();
         try {
             session = sessionFactory.openSession();
             persons = session.createCriteria(Person.class).addOrder(Order.asc("name"))
-                    .setFirstResult(first).setMaxResults(amount).list();
+                    .setFirstResult(offset).setMaxResults(length).list();
         } finally {
             if (session != null && session.isOpen()) session.close();
         }
