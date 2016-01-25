@@ -1,14 +1,14 @@
-CREATE TABLE persons
+CREATE TABLE User
 (
 id INT(8) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 name VARCHAR(25) NOT NULL,
 age INT,
-is_admin TINYINT NOT NULL DEFAULT 0,
-created_date TIMESTAMP
+isAdmin TINYINT NOT NULL DEFAULT 0,
+createdDate TIMESTAMP
 )ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8;
  /*!40101 SET character_set_client = @saved_cs_client */;
 
-INSERT INTO `persons` VALUES (20,'Мишаня',15,1,'2016-01-09 12:22:15'),
+INSERT INTO `User` VALUES (20,'Мишаня',15,1,'2016-01-09 12:22:15'),
 (24,'Симеон',32,0,'2016-01-09 17:03:50'),(25,'Василий',21,1,'2016-01-09 17:12:01'),
 (27,'Геральт',56,0,'2016-01-10 15:25:10'),(28,'Максим',45,0,'2016-01-11 05:19:23'),
 (31,'Антуан',34,0,'2016-01-11 08:54:14'),(35,'Маргарита',45,1,'2016-01-11 16:09:24'),

@@ -15,7 +15,7 @@ import java.util.Date;
  * Created by Exidnus on 06.01.2016.
  */
 @Entity
-@Table(name="persons")
+@Table(name="User")
 public class Person {
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
     @Id
@@ -26,10 +26,8 @@ public class Person {
     private int id;
     private String name;
     private int age;
-    @Column(name="is_admin")
     @Type(type="org.hibernate.type.NumericBooleanType")
     private boolean isAdmin;
-    @Column(name="created_date")
     private Date createdDate;
 
     public Person() {}
