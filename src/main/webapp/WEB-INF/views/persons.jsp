@@ -10,7 +10,7 @@
     <body>
         <div class="basic">
             <h1>Список людей</h1>
-            <table>
+            <table align="center">
                 <tr><td>Имя</td><td>Возраст</td><td>Дата регистрации</td>
                     <td>Админ</td><td>Удаление</td><td>Изменение</td></tr>
                 <c:forEach items="${personsList}" var="person">
@@ -39,17 +39,17 @@
                     </tr>
                 </c:forEach>
             </table>
-            <table><tr>
-            <td>
-            <form method="GET" action="<c:url value="/people/previous" />" >
-                <input type="submit" value="Предыдущая страница" />
-            </form>
-            </td>
-            <td>
-            <form method="GET" action="<c:url value="/people/next" />" >
-                <input type="submit" value="Следующая страница" />
-            </form>
-            </td>
+            <table align="center"><tr>
+                <td>
+                <form method="GET" action="<c:url value="/people/previous" />" >
+                    <input type="submit" value="Предыдущая страница" />
+                </form>
+                </td>
+                <td>
+                <form method="GET" action="<c:url value="/people/next" />" >
+                    <input type="submit" value="Следующая страница" />
+                </form>
+                </td>
             </tr></table>
             <p><a href="<c:url value="/people/add" />">Добавить человека</a></p>
             <p><a href="<c:url value="/people/search" />">Поиск по имени</a></p>

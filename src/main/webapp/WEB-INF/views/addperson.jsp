@@ -17,5 +17,6 @@
             <input type="radio" name="isAdmin" value="no" />Нет<br/>
             <input type="SUBMIT" value="Добавить" />
         </form>
+        <p><a href="<c:url value="/people" />">Вернуться к списку людей</a></p>
     </body>
 </html>
