@@ -8,12 +8,13 @@
         <link rel="stylesheet" type="text/css" href="<c:url value="/resources/style.css" />" >
     </head>
     <body>
+        <div class="basic">
         <h1>Поиск по имени</h1>
         <form method="POST">
             <input type="text" name="name">
             <input type="SUBMIT" value="Поиск">
         </form>
-        <table>
+        <table align="center">
             <tr><td>Имя</td><td>Возраст</td><td>Дата регистрации</td><td>Админ</td><td>Удаление</td></tr>
             <c:forEach items="${personsList}" var="person">
                 <tr>
@@ -42,6 +43,6 @@
             </c:forEach>
         </table>
         <p><a href="<c:url value="/people" />">Вернуться к списку людей</a></p>
-        <p><a href="<c:url value="/homepage" />">Вернуться к списку проектов</a></p>
+        </div>
     </body>
 </html>

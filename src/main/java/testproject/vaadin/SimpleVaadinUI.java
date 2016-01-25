@@ -52,6 +52,8 @@ public class SimpleVaadinUI extends UI {
         newPerson.addClickListener(clickEvent -> personForm.edit(new Person()));
         //personsGrid.addSelectionListener(clickEvent -> personForm.edit((Person) personsGrid.getSelectedRow()));
 
+        personForm.setVisible(false);
+
         personsGrid.setColumns("Имя", "Возраст", "Админ", "Дата создания");
         List<Person> persons = personRepository.getAll();
         for (Person p : persons) {

@@ -8,6 +8,7 @@
         <link rel="stylesheet" type="text/css" href="<c:url value="/resources/style.css" />" >
     </head>
     <body>
+        <div class="basic">
         <h1>Добавление человека в список</h1>
         <form method="POST" action="<c:url value="/people/adding" />" >
             Имя: <input type="text" name="name" /><br/>
@@ -18,5 +19,6 @@
             <input type="SUBMIT" value="Добавить" />
         </form>
         <p><a href="<c:url value="/people" />">Вернуться к списку людей</a></p>
+        </div>
     </body>
 </html>

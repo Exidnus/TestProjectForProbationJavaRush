@@ -8,10 +8,12 @@
         <link rel="stylesheet" type="text/css" href="<c:url value="/resources/style.css" />" >
     </head>
     <body>
+        <div class="basic">
         <h1>Измените данные</h1>
         <form method="POST" action="<c:url value="/people/performchange" />" >
-            <input type="text" name="name" value="${person.name}"><br/>
-            <input type="text" name="age" value="${person.age}"><br/>
+            Имя: <input type="text" name="name" value="${person.name}"><br/>
+            Возраст: <input type="text" name="age" value="${person.age}"><br/>
+            Админ: <br/>
             <c:choose>
                 <c:when test="${person.isAdmin()}">
                     <input type="radio" name="isAdmin" value="yes" checked/>Да<br/>
@@ -27,5 +29,6 @@
         </form>
         <p><a href="<c:url value="/people" />">Вернуться к списку людей</a></p>
         <p><a href="<c:url value="/homepage" />">Вернуться к списку проектов</a></p>
+        </div>
     </body>
 </html>
