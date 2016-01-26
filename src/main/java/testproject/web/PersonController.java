@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import testproject.data.PersonManager;
 import testproject.domain.Person;
 import testproject.data.PersonRepository;
 
@@ -17,20 +18,19 @@ import java.io.UnsupportedEncodingException;
 @Controller
 @RequestMapping(value = "/people")
 public class PersonController {
+    PersonManager manager;
     private int currentPosition = 0;
     private int length = 10; //Количество записей на странице
 
-    private PersonRepository personRepository;
-
     @Autowired
-    public PersonController(PersonRepository personRepository) {
-        this.personRepository = personRepository;
+    public PersonController(PersonManager manager) {
+        this.manager = manager;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public String goToPersonsList(Model model) {
-        model.addAttribute("personsList", personRepository.getPage(currentPosition, length));
-        //model.addAttribute("personsList", personRepository.getAll()); // Без пейджинга
+        model.addAttribute("personsList", manager.getPage(currentPosition, length));
+        //model.addAttribute("personsList", personManager.getAll()); // Без пейджинга
         return "persons";
     }
 
@@ -42,7 +42,7 @@ public class PersonController {
 
     @RequestMapping(value = "/next", method = RequestMethod.GET)
     public String goToNextPage() {
-        if (currentPosition + length < personRepository.getCount()) currentPosition += length;
+        if (currentPosition + length < manager.getCount()) currentPosition += length;
         return "redirect:/people";
     }
 
@@ -58,7 +58,7 @@ public class PersonController {
         boolean isAdmin = isAdminStr.equals("yes");
         name = encodeFromISO8859_1ToUTF8(name);
         Person person = new Person(name, age, isAdmin);
-        personRepository.addPerson(person);
+        manager.addPerson(person);
         return "redirect:/people";
     }
 
@@ -70,19 +70,19 @@ public class PersonController {
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String getResultOfSearch(Model model, @RequestParam String name) {
         name = encodeFromISO8859_1ToUTF8(name);
-        model.addAttribute("personsList", personRepository.findByName(name));
+        model.addAttribute("personsList", manager.findByName(name));
         return "searchbyname";
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String deletePersonById(@RequestParam int id) {
-        personRepository.deletePersonById(id);
+        manager.deletePersonById(id);
         return "redirect:/people";
     }
 
     @RequestMapping(value = "/change", method = RequestMethod.POST)
     public String goToChangePersonWithPersonId(Model model, @RequestParam int id) {
-        model.addAttribute("person", personRepository.getPersonById(id));
+        model.addAttribute("person", manager.getPersonById(id));
         return "changeperson";
     }
 
@@ -92,11 +92,11 @@ public class PersonController {
                                                  @RequestParam(value = "isAdmin") String isAdminStr) {
         boolean isAdmin = isAdminStr.equals("yes");
         name = encodeFromISO8859_1ToUTF8(name);
-        Person person = personRepository.getPersonById(id);
+        Person person = manager.getPersonById(id);
         person.setName(name);
         person.setAge(age);
         person.setAdmin(isAdmin);
-        personRepository.update(person);
+        manager.update(person);
         return "redirect:/people";
     }
 

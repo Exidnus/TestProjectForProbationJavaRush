@@ -15,25 +15,25 @@ import java.util.List;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = HibernateRepositoryTestConfig.class)
-public class PersonRepositoryHibernateTest extends TestCase {
+public class PersonManagerImplTest extends TestCase {
 
     @Autowired
-    PersonRepositoryHibernate personRepositoryHibernate;
+    PersonManager manager;
 
     @Test
     public void shouldGetCount() {
-        assertEquals(21, personRepositoryHibernate.getCount());
+        assertEquals(21, manager.getCount());
     }
 
     @Test
     public void shouldGetAll() {
-        assertEquals(21, personRepositoryHibernate.getAll().size());
+        assertEquals(21, manager.getAll().size());
     }
 
     @Test
     public void shouldGetPage() {
-        assertEquals(10, personRepositoryHibernate.getPage(0, 10).size());
-        assertEquals(7, personRepositoryHibernate.getPage(7, 7).size());
+        assertEquals(10, manager.getPage(0, 10).size());
+        assertEquals(7, manager.getPage(7, 7).size());
     }
 
     /*
@@ -43,12 +43,12 @@ public class PersonRepositoryHibernateTest extends TestCase {
     @Test
     public void shouldAddPersonAndDeleteById() {
         Person addedPerson = new Person("Semen", 25, false);
-        personRepositoryHibernate.addPerson(addedPerson);
-        assertEquals(22, personRepositoryHibernate.getCount());
-        List<Person> persons = personRepositoryHibernate.getAll();
+        manager.addPerson(addedPerson);
+        assertEquals(22, manager.getCount());
+        List<Person> persons = manager.getAll();
         assertTrue(persons.contains(addedPerson));
-        personRepositoryHibernate.deletePersonById(addedPerson.getId());
-        assertEquals(21, personRepositoryHibernate.getCount());
+        manager.deletePersonById(addedPerson.getId());
+        assertEquals(21, manager.getCount());
     }
 
     /*
@@ -57,7 +57,7 @@ public class PersonRepositoryHibernateTest extends TestCase {
 
     @Test
     public void shouldFindByName() {
-        List<Person> resultOfSearch = personRepositoryHibernate.findByName("Simeon");
+        List<Person> resultOfSearch = manager.findByName("Simeon");
         assertTrue(resultOfSearch.size() == 1);
         Person person = resultOfSearch.get(0);
         assertTrue(person.getName().equals("Simeon"));
@@ -66,12 +66,12 @@ public class PersonRepositoryHibernateTest extends TestCase {
 
     @Test
     public void shouldGetPersonByIdAndUpdate() {
-        Person person = personRepositoryHibernate.getPersonById(28);
+        Person person = manager.getPersonById(28);
         person.setName("Вова");
         person.setAdmin(true);
         person.setAge(45);
-        personRepositoryHibernate.update(person);
-        Person changedPerson = personRepositoryHibernate.getPersonById(28);
+        manager.update(person);
+        Person changedPerson = manager.getPersonById(28);
         assertEquals(person.getName(), changedPerson.getName());
         assertEquals(person.getAge(), changedPerson.getAge());
         assertEquals(person.isAdmin(), changedPerson.isAdmin());

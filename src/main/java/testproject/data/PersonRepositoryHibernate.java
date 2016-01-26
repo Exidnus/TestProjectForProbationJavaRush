@@ -1,6 +1,5 @@
 package testproject.data;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -10,7 +9,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import testproject.domain.Person;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,119 +26,45 @@ public class PersonRepositoryHibernate implements PersonRepository {
 
     @Override
     public List<Person> getAll() {
-        Session session = null;
-        List<Person> persons = new ArrayList<>();
-        try {
-            session = sessionFactory.openSession();
-            persons = session.createCriteria(Person.class).addOrder(Order.asc("name")).list();
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
-        return persons;
+        return sessionFactory.getCurrentSession().createCriteria(Person.class).addOrder(Order.asc("name")).list();
     }
 
     @Override
     public List<Person> getPage(int offset, int length) {
-        Session session = null;
-        List<Person> persons = new ArrayList<>();
-        try {
-            session = sessionFactory.openSession();
-            persons = session.createCriteria(Person.class).addOrder(Order.asc("name"))
-                    .setFirstResult(offset).setMaxResults(length).list();
-        } finally {
-            if (session != null && session.isOpen()) session.close();
-        }
-        return persons;
+        return sessionFactory.getCurrentSession().createCriteria(Person.class).addOrder(Order.asc("name"))
+                .setFirstResult(offset).setMaxResults(length).list();
     }
 
     @Override
     public void addPerson(Person person) {
-        Session session = null;
-        try {
-            session = sessionFactory.openSession();
-            session.beginTransaction();
-            session.save(person);
-            session.getTransaction().commit();
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
+        sessionFactory.getCurrentSession().save(person);
     }
 
     @Override
     public void deletePersonById(int id) {
-        Session session = null;
-        try {
-            session = sessionFactory.openSession();
-            session.createQuery("DELETE Person WHERE id = :id").setParameter("id", id).executeUpdate();
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
+        sessionFactory.getCurrentSession().createQuery("DELETE Person WHERE id = :id")
+                .setParameter("id", id).executeUpdate();
     }
 
     @Override
     public List<Person> findByName(String name) {
-        List<Person> result = null;
-        Session session = null;
-        try {
-            session = sessionFactory.openSession();
-            result = session.createCriteria(Person.class).add(Restrictions.eq("name", name)).list();
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
-        return result;
+        return sessionFactory.getCurrentSession().createCriteria(Person.class)
+                .add(Restrictions.eq("name", name)).list();
     }
 
     @Override
     public long getCount() {
-        long i = 0;
-        Session session = null;
-        try {
-            session = sessionFactory.openSession();
-            i = (long) session.createCriteria(Person.class)
-                    .setProjection(Projections.countDistinct("id")).uniqueResult();
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
-        return i;
+        return (long) sessionFactory.getCurrentSession().createCriteria(Person.class)
+                .setProjection(Projections.countDistinct("id")).uniqueResult();
     }
 
     @Override
     public Person getPersonById(int id) {
-        Person person = null;
-        Session session = null;
-        try {
-            session = sessionFactory.openSession();
-            person = session.get(Person.class, id);
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
-        return person;
+        return sessionFactory.getCurrentSession().get(Person.class, id);
     }
 
     @Override
     public void update(Person person) {
-        Session session = null;
-        try {
-            session = sessionFactory.openSession();
-            session.beginTransaction();
-            session.update(person);
-            session.getTransaction().commit();
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
-            }
-        }
+        sessionFactory.getCurrentSession().update(person);
     }
 }

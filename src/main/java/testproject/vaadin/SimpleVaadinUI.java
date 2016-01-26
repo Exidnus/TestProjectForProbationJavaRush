@@ -4,10 +4,10 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import testproject.data.PersonManager;
 import testproject.domain.Person;
 import testproject.data.PersonRepository;
 
@@ -30,15 +30,11 @@ public class SimpleVaadinUI extends UI {
     Button newPerson = new Button("Добавить человека");
     PersonForm personForm = new PersonForm();
 
-    private PersonRepository personRepository;
-
-    public PersonRepository getPersonRepository() {
-        return personRepository;
-    }
+    private PersonManager manager;
 
     @Autowired
-    public void setPersonRepository(PersonRepository personRepository) {
-        this.personRepository = personRepository;
+    public void setPersonRepository(PersonManager manager) {
+        this.manager = manager;
     }
 
     @Override
@@ -55,7 +51,7 @@ public class SimpleVaadinUI extends UI {
         personForm.setVisible(false);
 
         personsGrid.setColumns("Имя", "Возраст", "Админ", "Дата создания");
-        List<Person> persons = personRepository.getAll();
+        List<Person> persons = manager.getAll();
         for (Person p : persons) {
             personsGrid.addRow(p.getName(), String.valueOf(p.getAge()), p.isAdmin() ? "Да" : "Нет", p.getSimpleDate());
         }

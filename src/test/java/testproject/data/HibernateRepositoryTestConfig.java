@@ -10,7 +10,10 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import javax.sql.DataSource;
 
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import testproject.domain.Person;
 
 import java.io.IOException;
@@ -20,8 +23,14 @@ import java.util.Properties;
  * Created by Exidnus on 23.01.2016.
  */
 @org.springframework.context.annotation.Configuration
+@EnableTransactionManagement
 @ComponentScan
 public class HibernateRepositoryTestConfig {
+
+    @Bean
+    public PlatformTransactionManager platformTransactionManager(SessionFactory sessionFactory) {
+        return new HibernateTransactionManager(sessionFactory);
+    }
 
     @Bean(destroyMethod = "shutdown")
     public DataSource datasource() {
