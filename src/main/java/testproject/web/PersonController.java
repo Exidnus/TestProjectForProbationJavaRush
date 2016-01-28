@@ -109,14 +109,22 @@ public class PersonController {
     }
 
     /*
-    Геттеры для тестов
+    Геттеры и сеттеры для тестов
      */
 
     public int getCurrentPosition() {
         return currentPosition;
     }
 
+    public void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
+    }
+
     public int getLength() {
         return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
     }
 }

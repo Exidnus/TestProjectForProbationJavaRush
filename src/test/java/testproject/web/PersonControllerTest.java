@@ -51,10 +51,14 @@ public class PersonControllerTest {
 
         Assert.assertTrue(controller.getCurrentPosition() == 0);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-        Mockito.when(mockRepository.getCount()).thenReturn(100L);
+        Mockito.when(mockRepository.getCount()).thenReturn(controller.getLength() + 2L);
         mockMvc.perform(MockMvcRequestBuilders.get("/people/next"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
-        Assert.assertTrue(controller.getCurrentPosition() == 10);
+        Assert.assertTrue(controller.getCurrentPosition() == controller.getLength());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/people/next"));
+        Assert.assertTrue(controller.getCurrentPosition() == controller.getLength());
+
     }
 
     @Test
@@ -64,7 +68,7 @@ public class PersonControllerTest {
 
         Assert.assertTrue(controller.getCurrentPosition() == 0);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-        Mockito.when(mockRepository.getCount()).thenReturn(100L);
+        Mockito.when(mockRepository.getCount()).thenReturn(controller.getCurrentPosition() + 2L);
         mockMvc.perform(MockMvcRequestBuilders.get("/people/previous"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
         Assert.assertTrue(controller.getCurrentPosition() == 0);
