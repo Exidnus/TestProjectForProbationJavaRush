@@ -47,22 +47,27 @@ public class PersonControllerTest {
     @Test
     public void shouldGoToNextPage() throws Exception {
         PersonManager mockRepository = Mockito.mock(PersonManager.class);
-
         PersonController controller = new PersonController(mockRepository);
+
+        Assert.assertTrue(controller.getCurrentPosition() == 0);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        Mockito.when(mockRepository.getCount()).thenReturn(100L);
         mockMvc.perform(MockMvcRequestBuilders.get("/people/next"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
+        Assert.assertTrue(controller.getCurrentPosition() == 10);
     }
 
     @Test
     public void shouldGoToPrevoiusPage() throws Exception {
         PersonManager mockRepository = Mockito.mock(PersonManager.class);
-
         PersonController controller = new PersonController(mockRepository);
-        System.out.println(controller.getCurrentPosition());
+
+        Assert.assertTrue(controller.getCurrentPosition() == 0);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        Mockito.when(mockRepository.getCount()).thenReturn(100L);
         mockMvc.perform(MockMvcRequestBuilders.get("/people/previous"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
+        Assert.assertTrue(controller.getCurrentPosition() == 0);
     }
 
     @Test
