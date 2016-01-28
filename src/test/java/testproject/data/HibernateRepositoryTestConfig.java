@@ -32,7 +32,7 @@ public class HibernateRepositoryTestConfig {
         return new HibernateTransactionManager(sessionFactory);
     }
 
-    @Bean(destroyMethod = "shutdown")
+    @Bean
     public DataSource datasource() {
         EmbeddedDatabaseBuilder edb = new EmbeddedDatabaseBuilder();
         edb.setType(EmbeddedDatabaseType.H2);

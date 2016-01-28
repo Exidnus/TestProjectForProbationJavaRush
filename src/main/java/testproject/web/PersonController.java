@@ -107,4 +107,16 @@ public class PersonController {
         } catch (UnsupportedEncodingException ignored) {}
         return rightName;
     }
+
+    /*
+    Геттеры для тестов
+     */
+
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public int getLength() {
+        return length;
+    }
 }

@@ -1,5 +1,6 @@
 package testproject.web;
 
+import junit.framework.TestCase;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,7 +34,6 @@ public class PersonControllerTest {
     public void shouldGoToPersonsPage() throws Exception {
         PersonManager mockRepository = Mockito.mock(PersonManager.class);
         Mockito.when(mockRepository.getPage(0, 10)).thenReturn(persons);
-        //Mockito.when(mockRepository.getAll()).thenReturn(persons);
 
         PersonController controller = new PersonController(mockRepository);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
@@ -45,24 +45,23 @@ public class PersonControllerTest {
     }
 
     @Test
-    public void shouldGoToPrevoiusPage() throws Exception {
-        PersonManager mockRepository = Mockito.mock(PersonManager.class);
-        Mockito.when(mockRepository.getAll()).thenReturn(persons);
-
-        PersonController controller = new PersonController(mockRepository);
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-        mockMvc.perform(MockMvcRequestBuilders.get("/people/previous"))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
-    }
-
-    @Test
     public void shouldGoToNextPage() throws Exception {
         PersonManager mockRepository = Mockito.mock(PersonManager.class);
-        Mockito.when(mockRepository.getAll()).thenReturn(persons);
 
         PersonController controller = new PersonController(mockRepository);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         mockMvc.perform(MockMvcRequestBuilders.get("/people/next"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
+    }
+
+    @Test
+    public void shouldGoToPrevoiusPage() throws Exception {
+        PersonManager mockRepository = Mockito.mock(PersonManager.class);
+
+        PersonController controller = new PersonController(mockRepository);
+        System.out.println(controller.getCurrentPosition());
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc.perform(MockMvcRequestBuilders.get("/people/previous"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
     }
 
