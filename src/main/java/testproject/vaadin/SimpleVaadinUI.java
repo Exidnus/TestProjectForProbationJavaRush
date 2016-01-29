@@ -31,10 +31,12 @@ public class SimpleVaadinUI extends UI {
     Button newPerson = new Button("Добавить человека");
     PersonForm personForm = new PersonForm();
 
+    BeanItemContainer beanItemContainer;
+
     private PersonManager manager;
 
     @Autowired
-    public void setPersonRepository(PersonManager manager) {
+    public void setPersonManager(PersonManager manager) {
         this.manager = manager;
     }
 
@@ -56,14 +58,21 @@ public class SimpleVaadinUI extends UI {
         for (Person p : persons) {
             personsGrid.addRow(p.getName(), String.valueOf(p.getAge()), p.isAdmin() ? "Да" : "Нет", p.getSimpleDate());
         }*/
-
-        personsGrid.setContainerDataSource(new BeanItemContainer<>(Person.class, manager.getAll()));
+        beanItemContainer = new BeanItemContainer(Person.class, manager.getAll());
+        personsGrid.setContainerDataSource(beanItemContainer);
         personsGrid.setColumnOrder("name", "age");
-        //List<Grid.Column> columns = personsGrid.getColumns();
-        //personsGrid.removeColumn(columns.get(3));
-        //personsGrid.removeColumn(columns.get(4).toString());
+
+        List<Grid.Column> columns = personsGrid.getColumns();
+        columns.get(0).setHeaderCaption("Имя");
+        columns.get(1).setHeaderCaption("Возраст");
+        columns.get(2).setHeaderCaption("Админ");
+        personsGrid.removeColumn(columns.get(3).getPropertyId());
+        personsGrid.removeColumn(columns.get(4).getPropertyId());
+        columns.get(5).setHeaderCaption("Дата создания записи");
+
         personsGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         personsGrid.addSelectionListener(selectionEvent -> personForm.edit((Person) personsGrid.getSelectedRow()));
+
     }
 
     private void buildLayouts() {
@@ -89,5 +98,21 @@ public class SimpleVaadinUI extends UI {
         setContent(reallyMain);
     }
 
+    void refreshGrid() {
 
+        beanItemContainer = new BeanItemContainer(Person.class, manager.getAll());
+        try {
+            personsGrid.setContainerDataSource(beanItemContainer);
+        } catch (Throwable ignored) {
+            //Здесь выбрасывается исключение (NullPointerException)
+            //На форуме ваадин об этой ошибки писали, в качестве решения
+            //предлагалось удалять все итемы из бинИтемКонтейнера (мне это не помогло)
+            //TODO Что-то сделать с этим нужно
+        }
+        personForm.setVisible(false);
+    }
+
+    PersonManager getManager() {
+        return manager;
+    }
 }

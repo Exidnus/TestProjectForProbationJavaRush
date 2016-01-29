@@ -1,5 +1,7 @@
 package testproject.vaadin;
 
+import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.ui.*;
 import testproject.domain.Person;
 
@@ -10,11 +12,12 @@ public class PersonForm extends FormLayout {
 
     Button cancel = new Button("Отменить", this::cancel);
     TextField nameField = new TextField("Имя");
-    OptionGroup admin = new OptionGroup("Админ");
-    Button save = new Button("Сохранить", this::save);
-    DateField birthDate = new DateField("Дата рождения");
-
+    CheckBox admin = new CheckBox("Админ");
+    TextField ageField = new TextField("Возраст");
+    BeanFieldGroup<Person> beanFieldGroup;
+    //DateField birthDate = new DateField("Дата рождения");
     Person person;
+    Button save = new Button("Сохранить", this::save);
 
     public PersonForm() {
         configureComponents();
@@ -22,7 +25,7 @@ public class PersonForm extends FormLayout {
     }
 
     private void configureComponents() {
-        admin.addItems("Да", "Нет");
+
     }
 
     private void buildLayout() {
@@ -32,19 +35,25 @@ public class PersonForm extends FormLayout {
         HorizontalLayout actions = new HorizontalLayout(save, cancel);
         actions.setSpacing(true);
 
-        addComponents(actions, nameField, admin, birthDate);
+        addComponents(actions, nameField, ageField, admin);
     }
 
     void edit(Person person) {
         this.person = person;
+
         nameField.setValue(person.getName());
+        ageField.setValue(String.valueOf(person.getAge()));
+        admin.setValue(person.isAdmin());
         setVisible(true);
     }
 
     private void save(Button.ClickEvent event) {
-        String name = nameField.getValue();
-        boolean isAdmin = admin.getValue().equals("Да");
+        person.setName(nameField.getValue());
+        person.setAge(Integer.parseInt(ageField.getValue()));
+        person.setAdmin(admin.getValue());
 
+        getUI().getManager().update(person);
+        getUI().refreshGrid();
     }
 
     private void cancel(Button.ClickEvent event) {
