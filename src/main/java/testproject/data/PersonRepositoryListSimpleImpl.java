@@ -14,6 +14,9 @@ import java.util.List;
 @Repository //@Primary
 public class PersonRepositoryListSimpleImpl implements PersonRepository {
     private List<Person> persons;
+    private boolean isAscending = true;
+    private String orderedBy = "name";
+
 
     public PersonRepositoryListSimpleImpl() {
         persons = new ArrayList<>();
@@ -72,5 +75,11 @@ public class PersonRepositoryListSimpleImpl implements PersonRepository {
     @Override
     public void update(Person person) {
 
+    }
+
+    @Override
+    public void setOrder(String orderedBy, boolean isAscending) {
+        this.orderedBy = orderedBy;
+        this.isAscending = isAscending;
     }
 }

@@ -51,6 +51,37 @@
                 </form>
                 </td>
             </tr></table>
+            <h2>Упорядочить по:</h2>
+            <table align="center">
+                <tr>
+                    <td>
+                        <form method="POST" action="<c:url value="/people/changeorder" />" >
+                            <input type="hidden" name="newOrder" value="fromAtoZ" />
+                            <input type="submit" value="От А до Я" />
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" action="<c:url value="/people/changeorder" />" >
+                            <input type="hidden" name="newOrder" value="fromZtoA" />
+                            <input type="submit" value="От Я до А" />
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <form method="POST" action="<c:url value="/people/changeorder" />" >
+                            <input type="hidden" name="newOrder" value="ageAsc" />
+                            <input type="submit" value="По возрастанию возраста" />
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" action="<c:url value="/people/changeorder" />" >
+                            <input type="hidden" name="newOrder" value="ageDesc" />
+                            <input type="submit" value="По убыванию возраста" />
+                        </form>
+                    </td>
+                </tr>
+            </table>
             <p><a href="<c:url value="/people/add" />">Добавить человека</a></p>
             <p><a href="<c:url value="/people/search" />">Поиск по имени</a></p>
             <p><a href="<c:url value="/homepage" />">Вернуться к списку проектов</a></p>

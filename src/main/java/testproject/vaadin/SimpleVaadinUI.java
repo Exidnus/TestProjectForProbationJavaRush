@@ -2,6 +2,7 @@ package testproject.vaadin;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
@@ -50,11 +51,19 @@ public class SimpleVaadinUI extends UI {
 
         personForm.setVisible(false);
 
-        personsGrid.setColumns("Имя", "Возраст", "Админ", "Дата создания");
+        /*personsGrid.setColumns("Имя", "Возраст", "Админ", "Дата создания");
         List<Person> persons = manager.getAll();
         for (Person p : persons) {
             personsGrid.addRow(p.getName(), String.valueOf(p.getAge()), p.isAdmin() ? "Да" : "Нет", p.getSimpleDate());
-        }
+        }*/
+
+        personsGrid.setContainerDataSource(new BeanItemContainer<>(Person.class, manager.getAll()));
+        personsGrid.setColumnOrder("name", "age");
+        //List<Grid.Column> columns = personsGrid.getColumns();
+        //personsGrid.removeColumn(columns.get(3));
+        //personsGrid.removeColumn(columns.get(4).toString());
+        personsGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        personsGrid.addSelectionListener(selectionEvent -> personForm.edit((Person) personsGrid.getSelectedRow()));
     }
 
     private void buildLayouts() {
@@ -63,17 +72,21 @@ public class SimpleVaadinUI extends UI {
         filter.setWidth("100%");
         actions.setExpandRatio(filter, 1);
 
-        VerticalLayout center = new VerticalLayout(actions, personsGrid, goToHomePage);
+        VerticalLayout center = new VerticalLayout(actions, personsGrid);
         center.setSizeFull();
         personsGrid.setSizeFull();
         center.setExpandRatio(personsGrid, 1);
-        center.setComponentAlignment(goToHomePage, Alignment.BOTTOM_CENTER);
 
         HorizontalLayout main = new HorizontalLayout(center, personForm);
         main.setSizeFull();
         main.setExpandRatio(center, 1);
 
-        setContent(main);
+        VerticalLayout reallyMain = new VerticalLayout(main, goToHomePage);
+        reallyMain.setSizeFull();
+        reallyMain.setExpandRatio(main, 1);
+        reallyMain.setComponentAlignment(goToHomePage, Alignment.BOTTOM_CENTER);
+
+        setContent(reallyMain);
     }
 
 

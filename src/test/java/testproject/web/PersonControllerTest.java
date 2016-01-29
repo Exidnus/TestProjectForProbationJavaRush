@@ -1,6 +1,5 @@
 package testproject.web;
 
-import junit.framework.TestCase;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,7 +11,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import testproject.data.PersonManager;
 import testproject.domain.Person;
-import testproject.data.PersonRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +30,10 @@ public class PersonControllerTest {
 
     @Test
     public void shouldGoToPersonsPage() throws Exception {
-        PersonManager mockRepository = Mockito.mock(PersonManager.class);
-        Mockito.when(mockRepository.getPage(0, 10)).thenReturn(persons);
+        PersonManager mockManager = Mockito.mock(PersonManager.class);
+        Mockito.when(mockManager.getPage(0, 10)).thenReturn(persons);
 
-        PersonController controller = new PersonController(mockRepository);
+        PersonController controller = new PersonController(mockManager);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         mockMvc.perform(MockMvcRequestBuilders.get("/people"))
                 .andExpect(MockMvcResultMatchers.view().name("persons"))
@@ -46,12 +44,12 @@ public class PersonControllerTest {
 
     @Test
     public void shouldGoToNextPage() throws Exception {
-        PersonManager mockRepository = Mockito.mock(PersonManager.class);
-        PersonController controller = new PersonController(mockRepository);
+        PersonManager mockManager = Mockito.mock(PersonManager.class);
+        PersonController controller = new PersonController(mockManager);
 
         Assert.assertTrue(controller.getCurrentPosition() == 0);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-        Mockito.when(mockRepository.getCount()).thenReturn(controller.getLength() + 2L);
+        Mockito.when(mockManager.getCount()).thenReturn(controller.getLength() + 2L);
         mockMvc.perform(MockMvcRequestBuilders.get("/people/next"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
         Assert.assertTrue(controller.getCurrentPosition() == controller.getLength());
@@ -63,21 +61,57 @@ public class PersonControllerTest {
 
     @Test
     public void shouldGoToPrevoiusPage() throws Exception {
-        PersonManager mockRepository = Mockito.mock(PersonManager.class);
-        PersonController controller = new PersonController(mockRepository);
+        PersonManager mockManager = Mockito.mock(PersonManager.class);
+        PersonController controller = new PersonController(mockManager);
 
         Assert.assertTrue(controller.getCurrentPosition() == 0);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-        Mockito.when(mockRepository.getCount()).thenReturn(controller.getCurrentPosition() + 2L);
+        Mockito.when(mockManager.getCount()).thenReturn(controller.getCurrentPosition() + 2L);
         mockMvc.perform(MockMvcRequestBuilders.get("/people/previous"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
         Assert.assertTrue(controller.getCurrentPosition() == 0);
     }
 
     @Test
+    public void shouldChangeOrderGoToZeroCurrentPositionAndRedirectToPeople() throws Exception {
+        PersonManager mockManager = Mockito.mock(PersonManager.class);
+        PersonController controller = new PersonController(mockManager);
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        controller.setCurrentPosition(10);
+        mockMvc.perform(MockMvcRequestBuilders.post("/people/changeorder")
+                .param("newOrder", "fromAtoZ"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
+        Assert.assertEquals(controller.getCurrentPosition(), 0);
+        Mockito.verify(mockManager, Mockito.atLeastOnce()).setOrder("name", true);
+
+        controller.setCurrentPosition(25);
+        mockMvc.perform(MockMvcRequestBuilders.post("/people/changeorder")
+                .param("newOrder", "fromZtoA"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
+        Assert.assertEquals(controller.getCurrentPosition(), 0);
+        Mockito.verify(mockManager, Mockito.atLeastOnce()).setOrder("name", false);
+
+        controller.setCurrentPosition(20);
+        mockMvc.perform(MockMvcRequestBuilders.post("/people/changeorder")
+                .param("newOrder", "ageAsc"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
+        Assert.assertEquals(controller.getCurrentPosition(), 0);
+        Mockito.verify(mockManager, Mockito.atLeastOnce()).setOrder("age", true);
+
+        controller.setCurrentPosition(25);
+        mockMvc.perform(MockMvcRequestBuilders.post("/people/changeorder")
+                .param("newOrder", "ageDesc"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
+        Assert.assertEquals(controller.getCurrentPosition(), 0);
+        Mockito.verify(mockManager, Mockito.atLeastOnce()).setOrder("age", false);
+
+    }
+
+    @Test
     public void shouldGoToAddPersonPage() throws Exception {
-        PersonManager mockRepository = Mockito.mock(PersonManager.class);
-        PersonController controller = new PersonController(mockRepository);
+        PersonManager mockManager = Mockito.mock(PersonManager.class);
+        PersonController controller = new PersonController(mockManager);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         mockMvc.perform(MockMvcRequestBuilders.get("/people/add"))
                 .andExpect(MockMvcResultMatchers.view().name("addperson"));
@@ -93,11 +127,11 @@ public class PersonControllerTest {
      */
     @Test
     public void shouldAddPerson() throws Exception {
-        PersonManager mockRepository = Mockito.mock(PersonManager.class);
+        PersonManager mockManager = Mockito.mock(PersonManager.class);
         Person person = persons.get(0);
         //mockRepository.addPerson(person);
 
-        PersonController personController = new PersonController(mockRepository);
+        PersonController personController = new PersonController(mockManager);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
         mockMvc.perform(MockMvcRequestBuilders.post("/people/adding")
                 .param("name", person.getName())
@@ -105,13 +139,13 @@ public class PersonControllerTest {
                 .param("isAdmin", person.isAdmin() ? "yes" : "no"))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
 
-        Mockito.verify(mockRepository, Mockito.atLeastOnce()).addPerson(person);
+        Mockito.verify(mockManager, Mockito.atLeastOnce()).addPerson(person);
     }
 
     @Test
     public void shouldGoToSearchByName() throws Exception {
-        PersonManager mockRepository = Mockito.mock(PersonManager.class);
-        PersonController controller = new PersonController(mockRepository);
+        PersonManager mockManager = Mockito.mock(PersonManager.class);
+        PersonController controller = new PersonController(mockManager);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         mockMvc.perform(MockMvcRequestBuilders.get("/people/search"))
                 .andExpect(MockMvcResultMatchers.view().name("searchbyname"));
@@ -124,25 +158,25 @@ public class PersonControllerTest {
      */
     @Test
     public void shouldGetResultOfSearchAndGoToSearchByName() throws Exception {
-        PersonManager mockRepository = Mockito.mock(PersonManager.class);
-        PersonController controller = new PersonController(mockRepository);
+        PersonManager mockManager = Mockito.mock(PersonManager.class);
+        PersonController controller = new PersonController(mockManager);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         List<Person> fakeResultOfSearch = new ArrayList<>();
         fakeResultOfSearch.add(persons.get(0));
-        Mockito.when(mockRepository.findByName(fakeResultOfSearch.get(0).getName())).thenReturn(fakeResultOfSearch);
+        Mockito.when(mockManager.findByName(fakeResultOfSearch.get(0).getName())).thenReturn(fakeResultOfSearch);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/people/search")
                 .param("name", fakeResultOfSearch.get(0).getName()))
                 .andExpect(MockMvcResultMatchers.view().name("searchbyname"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("personsList"))
                 .andExpect(MockMvcResultMatchers.model().attribute("personsList", fakeResultOfSearch));
-        Mockito.verify(mockRepository, Mockito.atLeastOnce()).findByName(fakeResultOfSearch.get(0).getName());
+        Mockito.verify(mockManager, Mockito.atLeastOnce()).findByName(fakeResultOfSearch.get(0).getName());
     }
 
     @Test
     public void shouldDeleteAndGoToPersonsList() throws Exception {
-        PersonManager mockRepository = Mockito.mock(PersonManager.class);
-        PersonController controller = new PersonController(mockRepository);
+        PersonManager mockManager = Mockito.mock(PersonManager.class);
+        PersonController controller = new PersonController(mockManager);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         mockMvc.perform(MockMvcRequestBuilders.post("/people/delete")
                 .param("id", "35"))
@@ -151,10 +185,10 @@ public class PersonControllerTest {
 
     @Test
     public void shouldGoToChangePersonPageWithPerson() throws Exception {
-        PersonManager mockRepository = Mockito.mock(PersonManager.class);
-        PersonController controller = new PersonController(mockRepository);
+        PersonManager mockManager = Mockito.mock(PersonManager.class);
+        PersonController controller = new PersonController(mockManager);
         Person person = persons.get(1);
-        Mockito.when(mockRepository.getPersonById(1)).thenReturn(person);
+        Mockito.when(mockManager.getPersonById(1)).thenReturn(person);
 
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         mockMvc.perform(MockMvcRequestBuilders.post("/people/change")
@@ -170,11 +204,11 @@ public class PersonControllerTest {
 
     @Test
     public void shouldChangePersonAndGoToPersonsList() throws Exception {
-        PersonManager mockRepository = Mockito.mock(PersonManager.class);
-        PersonController personController = new PersonController(mockRepository);
+        PersonManager mockManager = Mockito.mock(PersonManager.class);
+        PersonController personController = new PersonController(mockManager);
         Person person = persons.get(0);
         person.setId(0);
-        Mockito.when(mockRepository.getPersonById(0)).thenReturn(person);
+        Mockito.when(mockManager.getPersonById(0)).thenReturn(person);
 
         Person changedPerson = new Person();
         changedPerson.setId(0);
@@ -192,6 +226,6 @@ public class PersonControllerTest {
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/people"));
 
         Assert.assertEquals(person, changedPerson);
-        Mockito.verify(mockRepository, Mockito.atLeastOnce()).update(person);
+        Mockito.verify(mockManager, Mockito.atLeastOnce()).update(person);
     }
 }

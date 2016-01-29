@@ -16,4 +16,5 @@ public interface PersonManager {
     long getCount();
     Person getPersonById(int id);
     void update(Person person);
+    void setOrder(String orderedBy, boolean isAscending);
 }

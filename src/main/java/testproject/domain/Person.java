@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,12 +17,9 @@ import java.util.Date;
  */
 @Entity
 @Table(name="User")
-public class Person {
+public class Person implements Serializable {
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
     @Id
-    //TODO разобраться, почему изменение или отсутствие стратегии приводило к ошибке (без Spring'a ее не было)
-    //Сейчас ошибки нет
-    //А сейчас опять появилась, короче, надо разобраться
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;

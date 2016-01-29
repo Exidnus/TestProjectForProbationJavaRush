@@ -67,4 +67,9 @@ public class PersonManagerImpl implements PersonManager {
     public void update(Person person) {
         personRepository.update(person);
     }
+
+    @Override
+    public void setOrder(String orderedBy, boolean isAscending) {
+        personRepository.setOrder(orderedBy, isAscending);
+    }
 }

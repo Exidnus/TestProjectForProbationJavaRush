@@ -37,6 +37,7 @@ public class PersonForm extends FormLayout {
 
     void edit(Person person) {
         this.person = person;
+        nameField.setValue(person.getName());
         setVisible(true);
     }
 

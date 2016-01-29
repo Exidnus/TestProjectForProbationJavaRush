@@ -18,6 +18,8 @@ import java.util.List;
 @Primary
 public class PersonRepositoryHibernate implements PersonRepository {
     private SessionFactory sessionFactory;
+    private boolean isAscending = true;
+    private String orderedBy = "name";
 
     @Autowired
     public PersonRepositoryHibernate(SessionFactory sessionFactory) {
@@ -26,12 +28,14 @@ public class PersonRepositoryHibernate implements PersonRepository {
 
     @Override
     public List<Person> getAll() {
-        return sessionFactory.getCurrentSession().createCriteria(Person.class).addOrder(Order.asc("name")).list();
+        return sessionFactory.getCurrentSession().createCriteria(Person.class)
+                .addOrder(isAscending ? Order.asc(orderedBy) : Order.desc(orderedBy)).list();
     }
 
     @Override
     public List<Person> getPage(int offset, int length) {
-        return sessionFactory.getCurrentSession().createCriteria(Person.class).addOrder(Order.asc("name"))
+        return sessionFactory.getCurrentSession().createCriteria(Person.class)
+                .addOrder(isAscending ? Order.asc(orderedBy) : Order.desc(orderedBy))
                 .setFirstResult(offset).setMaxResults(length).list();
     }
 
@@ -66,5 +70,11 @@ public class PersonRepositoryHibernate implements PersonRepository {
     @Override
     public void update(Person person) {
         sessionFactory.getCurrentSession().update(person);
+    }
+
+    @Override
+    public void setOrder(String orderedBy, boolean isAscending) {
+        this.orderedBy = orderedBy;
+        this.isAscending = isAscending;
     }
 }

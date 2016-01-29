@@ -46,6 +46,26 @@ public class PersonController {
         return "redirect:/people";
     }
 
+    @RequestMapping(value = "/changeorder", method = RequestMethod.POST)
+    public String changeOrder(@RequestParam String newOrder) {
+        switch (newOrder) {
+            case "fromAtoZ":
+                manager.setOrder("name", true);
+                break;
+            case "fromZtoA":
+                manager.setOrder("name", false);
+                break;
+            case "ageAsc":
+                manager.setOrder("age", true);
+                break;
+            case "ageDesc":
+                manager.setOrder("age", false);
+                break;
+        }
+        currentPosition = 0;
+        return "redirect:/people";
+    }
+
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String goToAddPerson() {
         return "addperson";
