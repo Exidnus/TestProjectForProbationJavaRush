@@ -31,7 +31,7 @@ public class SimpleVaadinUI extends UI {
     Button newPerson = new Button("Добавить человека");
     PersonForm personForm = new PersonForm();
 
-    BeanItemContainer beanItemContainer;
+    BeanItemContainer<Person> beanItemContainer;
 
     private PersonManager manager;
 
@@ -58,7 +58,7 @@ public class SimpleVaadinUI extends UI {
         for (Person p : persons) {
             personsGrid.addRow(p.getName(), String.valueOf(p.getAge()), p.isAdmin() ? "Да" : "Нет", p.getSimpleDate());
         }*/
-        beanItemContainer = new BeanItemContainer(Person.class, manager.getAll());
+        beanItemContainer = new BeanItemContainer<>(Person.class, manager.getAll());
         personsGrid.setContainerDataSource(beanItemContainer);
         personsGrid.setColumnOrder("name", "age");
 
@@ -100,7 +100,7 @@ public class SimpleVaadinUI extends UI {
 
     void refreshGrid() {
 
-        beanItemContainer = new BeanItemContainer(Person.class, manager.getAll());
+        beanItemContainer = new BeanItemContainer<>(Person.class, manager.getAll());
         try {
             personsGrid.setContainerDataSource(beanItemContainer);
         } catch (Throwable ignored) {
