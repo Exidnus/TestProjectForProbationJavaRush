@@ -16,7 +16,7 @@ import java.util.Date;
  * Created by Exidnus on 06.01.2016.
  */
 @Entity
-@Table(name="User")
+@Table(name="user")
 public class Person implements Serializable {
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
     @Id
