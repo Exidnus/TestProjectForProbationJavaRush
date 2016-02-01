@@ -8,6 +8,9 @@ import javax.servlet.ServletRegistration.Dynamic;
 /**
  * Created by Exidnus on 22.01.2016.
  */
+/*
+Класс необходим для интеграции Spring и Vaadin, без него DI не работает
+ */
 public class VaadinServlerInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
