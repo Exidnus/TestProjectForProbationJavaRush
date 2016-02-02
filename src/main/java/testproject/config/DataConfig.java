@@ -26,6 +26,7 @@ public class DataConfig {
         dataSource.setDatabaseName("test");
         dataSource.setUser("root");
         dataSource.setPassword("root");
+        dataSource.setEncoding("UTF-8");
         return dataSource;
     }
 

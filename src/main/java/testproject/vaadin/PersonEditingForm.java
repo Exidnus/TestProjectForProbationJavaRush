@@ -1,7 +1,5 @@
 package testproject.vaadin;
 
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.ui.*;
 import testproject.domain.Person;
 
@@ -10,15 +8,14 @@ import testproject.domain.Person;
  */
 public class PersonEditingForm extends FormLayout {
 
-    Button save = new Button("Сохранить", this::save);
-    Button cancel = new Button("Отменить", this::cancel);
-    Button delete = new Button("Удалить", this::delete);
-    TextField nameField = new TextField("Имя");
-    CheckBox admin = new CheckBox("Админ");
-    TextField ageField = new TextField("Возраст");
-    BeanFieldGroup<Person> beanFieldGroup;
-    //DateField birthDate = new DateField("Дата рождения");
-    Person person;
+    private Button save = new Button("Сохранить", this::save);
+    private Button cancel = new Button("Отменить", this::cancel);
+    private Button delete = new Button("Удалить", this::delete);
+    private TextField nameField = new TextField("Имя");
+    private CheckBox admin = new CheckBox("Админ");
+    private TextField ageField = new TextField("Возраст");
+
+    private Person person;
 
     public PersonEditingForm() {
         configureComponents();

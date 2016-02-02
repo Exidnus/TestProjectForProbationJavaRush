@@ -9,11 +9,11 @@ import java.util.Date;
  * Created by exidnus on 02.02.16.
  */
 public class PersonAddingForm extends FormLayout {
-    Button save = new Button("Сохранить", this::save);
-    Button cancel = new Button("Отмена", this::cancel);
-    TextField nameTextField = new TextField("Имя");
-    CheckBox isAdminCheckBox = new CheckBox("Админ");
-    DateField birthDay = new DateField("День рождения");
+    private Button save = new Button("Сохранить", this::save);
+    private Button cancel = new Button("Отмена", this::cancel);
+    private TextField nameTextField = new TextField("Имя");
+    private CheckBox isAdminCheckBox = new CheckBox("Админ");
+    private DateField birthDay = new DateField("День рождения");
 
     public PersonAddingForm() {
         configureComponents();
@@ -34,7 +34,7 @@ public class PersonAddingForm extends FormLayout {
         addComponents(nameTextField, isAdminCheckBox, birthDay, actions);
     }
 
-    public void create() {
+    void create() {
         getUI().getPersonEditingForm().setVisible(false);
         setVisible(true);
     }

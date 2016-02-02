@@ -3,6 +3,7 @@ package testproject.vaadin;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.MethodProperty;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
@@ -12,6 +13,7 @@ import testproject.data.PersonManager;
 import testproject.domain.Person;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Exidnus on 20.01.2016.
@@ -101,11 +103,10 @@ public class SimpleVaadinUI extends UI {
         try {
             personsGrid.setContainerDataSource(beanItemContainer);
         } catch (Exception ignored) {
-            //Здесь выбрасывается исключение (NullPointerException)
+            //Здесь выбрасывается исключение (NullPointerException - причина)
             //На форуме ваадин об этой ошибки писали, в качестве решения
             //предлагалось удалять все итемы из бинИтемКонтейнера (мне это не помогло)
             //TODO Что-то сделать с этим нужно
-            Notification.show(ignored.getClass().getSimpleName());
         }
         personEditingForm.setVisible(false);
         personAddingForm.setVisible(false);

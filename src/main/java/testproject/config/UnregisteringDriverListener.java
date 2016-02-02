@@ -25,6 +25,7 @@ but has failed to stop it. This is very likely to create a memory leak. Stack tr
  java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:143)
  com.mysql.jdbc.AbandonedConnectionCleanupThread.run(AbandonedConnectionCleanupThread.java:43)
 Действительно, если много раз деплоить-андеплоить приложение без данного класса, утечки памяти наблюдались.
+//TODO кажется, утечки памяти никуда не делись!
  */
 @Component
 public class UnregisteringDriverListener implements ServletContextListener, WebApplicationInitializer {
