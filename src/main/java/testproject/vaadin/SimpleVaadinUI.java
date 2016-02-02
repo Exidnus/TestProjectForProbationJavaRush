@@ -50,7 +50,12 @@ public class SimpleVaadinUI extends UI {
     }
 
     private void configureComponents() {
-        filter.setInputPrompt("Фильтр по имени");
+        filter.setInputPrompt("Поиск по имени");
+        filter.addTextChangeListener(textChangeEvent -> {
+            if (textChangeEvent.getText().length() == 0) refreshGrid();
+            else refreshGrid(textChangeEvent.getText());
+        });
+
         newPerson.addClickListener(clickEvent -> personAddingForm.create());
 
         personEditingForm.setVisible(false);
@@ -98,6 +103,7 @@ public class SimpleVaadinUI extends UI {
     }
 
     void refreshGrid() {
+        filter.setValue("");
 
         beanItemContainer = new BeanItemContainer<>(Person.class, manager.getAll());
         try {
@@ -110,6 +116,15 @@ public class SimpleVaadinUI extends UI {
         }
         personEditingForm.setVisible(false);
         personAddingForm.setVisible(false);
+    }
+
+    void refreshGrid(String name) {
+        beanItemContainer = new BeanItemContainer<>(Person.class, manager.findByName(name));
+        try {
+            personsGrid.setContainerDataSource(beanItemContainer);
+        } catch (Exception ignored) {}
+        personAddingForm.setVisible(false);
+        personEditingForm.setVisible(false);
     }
 
     PersonManager getManager() {
