@@ -10,12 +10,21 @@
     <body>
         <div class="basic">
         <h1>Добавление человека в список</h1>
+        <c:choose>
+            <c:when test="${isWrongInput}">
+            <p class="wrong">
+                Неверный ввод! Пожалуйста, заполните все поля! Не забудьте указать, является ли
+                админом человек! Имя должно быть не короче двух букв, возраст от 1 включительно
+                до 100 включительно.
+            </p>
+            </c:when>
+        </c:choose>
         <form method="POST" action="<c:url value="/people/adding" />" >
-            Имя: <input type="text" name="name" /><br/>
-            Возраст: <input type="text" name="age" /><br/>
+            Имя: <input type="text" name="name" required /><br/>
+            Возраст: <input type="text" name="age" required /><br/>
             Админ: <br/>
             <input type="radio" name="isAdmin" value="yes" />Да<br/>
-            <input type="radio" name="isAdmin" value="no" />Нет<br/>
+            <input type="radio" name="isAdmin" value="no" checked />Нет<br/>
             <input type="SUBMIT" value="Добавить" />
         </form>
         <p><a href="<c:url value="/people" />">Вернуться к списку людей</a></p>

@@ -143,6 +143,37 @@ public class PersonControllerTest {
     }
 
     @Test
+    public void shouldCatchErrorsWhenAddingPersonAndNotifyAboutThat() throws Exception {
+        PersonManager mockManager = Mockito.mock(PersonManager.class);
+        PersonController personController = new PersonController(mockManager);
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
+        mockMvc.perform(MockMvcRequestBuilders.post("/people/adding")
+                .param("name", "V")
+                .param("age", "25")
+                .param("isAdmin", "yes"))
+                .andExpect(MockMvcResultMatchers.view().name("addperson"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("isWrongInput"))
+                .andExpect(MockMvcResultMatchers.model().attribute("isWrongInput", true));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/people/adding")
+                .param("name", "Vasia")
+                .param("age", "125")
+                .param("isAdmin", "yes"))
+                .andExpect(MockMvcResultMatchers.view().name("addperson"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("isWrongInput"))
+                .andExpect(MockMvcResultMatchers.model().attribute("isWrongInput", true));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/people/adding")
+                .param("name", "Vasia")
+                .param("age", "0")
+                .param("isAdmin", "yes"))
+                .andExpect(MockMvcResultMatchers.view().name("addperson"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("isWrongInput"))
+                .andExpect(MockMvcResultMatchers.model().attribute("isWrongInput", true));
+    }
+
+    @Test
     public void shouldGoToSearchByName() throws Exception {
         PersonManager mockManager = Mockito.mock(PersonManager.class);
         PersonController controller = new PersonController(mockManager);

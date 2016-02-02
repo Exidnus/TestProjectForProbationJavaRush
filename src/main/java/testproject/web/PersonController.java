@@ -3,12 +3,11 @@ package testproject.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
 import testproject.data.PersonManager;
 import testproject.domain.Person;
-import testproject.data.PersonRepository;
 
 import java.io.UnsupportedEncodingException;
 
@@ -72,11 +71,16 @@ public class PersonController {
     }
 
     @RequestMapping(value = "/adding", method = RequestMethod.POST)
-    public String addPersonAndGoToPersonList(@RequestParam String name,
+    public String addPersonAndGoToPersonList(Model model, @RequestParam String name,
                                              @RequestParam int age,
                                              @RequestParam(value = "isAdmin") String isAdminStr) {
+        if (age < 1 || age > 100 || name.length() < 2) {
+            model.addAttribute("isWrongInput", true);
+            return "addperson";
+        }
+
         boolean isAdmin = isAdminStr.equals("yes");
-        name = encodeFromISO8859_1ToUTF8(name);
+        name = encodeFromISO88591ToUTF8(name);
         Person person = new Person(name, age, isAdmin);
         manager.addPerson(person);
         return "redirect:/people";
@@ -89,7 +93,7 @@ public class PersonController {
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String getResultOfSearch(Model model, @RequestParam String name) {
-        name = encodeFromISO8859_1ToUTF8(name);
+        name = encodeFromISO88591ToUTF8(name);
         model.addAttribute("personsList", manager.findByName(name));
         return "searchbyname";
     }
@@ -111,7 +115,7 @@ public class PersonController {
                                                  @RequestParam int age,
                                                  @RequestParam(value = "isAdmin") String isAdminStr) {
         boolean isAdmin = isAdminStr.equals("yes");
-        name = encodeFromISO8859_1ToUTF8(name);
+        name = encodeFromISO88591ToUTF8(name);
         Person person = manager.getPersonById(id);
         person.setName(name);
         person.setAge(age);
@@ -120,7 +124,7 @@ public class PersonController {
         return "redirect:/people";
     }
 
-    private String encodeFromISO8859_1ToUTF8(String name) {
+    private String encodeFromISO88591ToUTF8(String name) {
         String rightName = null;
         try {
             rightName = new String(name.getBytes("ISO8859-1"), "UTF-8");

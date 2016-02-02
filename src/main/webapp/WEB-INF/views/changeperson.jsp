@@ -11,8 +11,8 @@
         <div class="basic">
         <h1>Измените данные</h1>
         <form method="POST" action="<c:url value="/people/performchange" />" >
-            Имя: <input type="text" name="name" value="${person.name}"><br/>
-            Возраст: <input type="text" name="age" value="${person.age}"><br/>
+            Имя: <input type="text" name="name" value="${person.name}" required /><br/>
+            Возраст: <input type="text" name="age" value="${person.age}" required /><br/>
             Админ: <br/>
             <c:choose>
                 <c:when test="${person.isAdmin()}">
