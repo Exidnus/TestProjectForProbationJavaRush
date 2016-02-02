@@ -8,18 +8,19 @@ import testproject.domain.Person;
 /**
  * Created by Exidnus on 23.01.2016.
  */
-public class PersonForm extends FormLayout {
+public class PersonEditingForm extends FormLayout {
 
+    Button save = new Button("Сохранить", this::save);
     Button cancel = new Button("Отменить", this::cancel);
+    Button delete = new Button("Удалить", this::delete);
     TextField nameField = new TextField("Имя");
     CheckBox admin = new CheckBox("Админ");
     TextField ageField = new TextField("Возраст");
     BeanFieldGroup<Person> beanFieldGroup;
     //DateField birthDate = new DateField("Дата рождения");
     Person person;
-    Button save = new Button("Сохранить", this::save);
 
-    public PersonForm() {
+    public PersonEditingForm() {
         configureComponents();
         buildLayout();
     }
@@ -32,7 +33,7 @@ public class PersonForm extends FormLayout {
         setSizeUndefined();
         setMargin(true);
 
-        HorizontalLayout actions = new HorizontalLayout(save, cancel);
+        HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
         actions.setSpacing(true);
 
         addComponents(actions, nameField, ageField, admin);
@@ -44,6 +45,8 @@ public class PersonForm extends FormLayout {
         nameField.setValue(person.getName());
         ageField.setValue(String.valueOf(person.getAge()));
         admin.setValue(person.isAdmin());
+
+        getUI().getPersonAddingForm().setVisible(false);
         setVisible(true);
     }
 
@@ -59,6 +62,11 @@ public class PersonForm extends FormLayout {
     private void cancel(Button.ClickEvent event) {
         Notification.show("Отмена");
         setVisible(false);
+    }
+
+    private void delete(Button.ClickEvent event) {
+        getUI().getManager().deletePersonById(person.getId());
+        getUI().refreshGrid();
     }
 
     @Override

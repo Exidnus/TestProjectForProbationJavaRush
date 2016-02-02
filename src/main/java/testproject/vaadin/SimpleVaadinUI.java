@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import testproject.data.PersonManager;
 import testproject.domain.Person;
-import testproject.data.PersonRepository;
 
 import java.util.List;
 
@@ -25,13 +24,15 @@ public class SimpleVaadinUI extends UI {
 
     //TODO Выполнил интеграцию Vaadin и Spring, мягко говоря, методом научного тыка, нужно разобраться
 
-    Grid personsGrid = new Grid();
-    Link goToHomePage = new Link("Вернуться к списку проектов", new ExternalResource("homepage"));
-    TextField filter = new TextField();
-    Button newPerson = new Button("Добавить человека");
-    PersonForm personForm = new PersonForm();
+    private Grid personsGrid = new Grid();
+    private Link goToHomePage = new Link("Вернуться к списку проектов", new ExternalResource("homepage"));
+    private TextField filter = new TextField();
+    private Button newPerson = new Button("Добавить человека");
 
-    BeanItemContainer<Person> beanItemContainer;
+    private PersonEditingForm personEditingForm = new PersonEditingForm();
+    private PersonAddingForm personAddingForm = new PersonAddingForm();
+
+    private BeanItemContainer<Person> beanItemContainer;
 
     private PersonManager manager;
 
@@ -48,16 +49,11 @@ public class SimpleVaadinUI extends UI {
 
     private void configureComponents() {
         filter.setInputPrompt("Фильтр по имени");
-        newPerson.addClickListener(clickEvent -> personForm.edit(new Person()));
-        //personsGrid.addSelectionListener(clickEvent -> personForm.edit((Person) personsGrid.getSelectedRow()));
+        newPerson.addClickListener(clickEvent -> personAddingForm.create());
 
-        personForm.setVisible(false);
+        personEditingForm.setVisible(false);
+        personAddingForm.setVisible(false);
 
-        /*personsGrid.setColumns("Имя", "Возраст", "Админ", "Дата создания");
-        List<Person> persons = manager.getAll();
-        for (Person p : persons) {
-            personsGrid.addRow(p.getName(), String.valueOf(p.getAge()), p.isAdmin() ? "Да" : "Нет", p.getSimpleDate());
-        }*/
         beanItemContainer = new BeanItemContainer<>(Person.class, manager.getAll());
         personsGrid.setContainerDataSource(beanItemContainer);
         personsGrid.setColumnOrder("name", "age");
@@ -71,7 +67,8 @@ public class SimpleVaadinUI extends UI {
         columns.get(5).setHeaderCaption("Дата создания записи");
 
         personsGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        personsGrid.addSelectionListener(selectionEvent -> personForm.edit((Person) personsGrid.getSelectedRow()));
+        personsGrid.addSelectionListener(selectionEvent -> personEditingForm.edit((Person) personsGrid
+                .getSelectedRow()));
 
     }
 
@@ -86,7 +83,7 @@ public class SimpleVaadinUI extends UI {
         personsGrid.setSizeFull();
         center.setExpandRatio(personsGrid, 1);
 
-        HorizontalLayout main = new HorizontalLayout(center, personForm);
+        HorizontalLayout main = new HorizontalLayout(center, personEditingForm, personAddingForm);
         main.setSizeFull();
         main.setExpandRatio(center, 1);
 
@@ -103,16 +100,26 @@ public class SimpleVaadinUI extends UI {
         beanItemContainer = new BeanItemContainer<>(Person.class, manager.getAll());
         try {
             personsGrid.setContainerDataSource(beanItemContainer);
-        } catch (Throwable ignored) {
+        } catch (Exception ignored) {
             //Здесь выбрасывается исключение (NullPointerException)
             //На форуме ваадин об этой ошибки писали, в качестве решения
             //предлагалось удалять все итемы из бинИтемКонтейнера (мне это не помогло)
             //TODO Что-то сделать с этим нужно
+            Notification.show(ignored.getClass().getSimpleName());
         }
-        personForm.setVisible(false);
+        personEditingForm.setVisible(false);
+        personAddingForm.setVisible(false);
     }
 
     PersonManager getManager() {
         return manager;
+    }
+
+    PersonAddingForm getPersonAddingForm() {
+        return personAddingForm;
+    }
+
+    PersonEditingForm getPersonEditingForm() {
+        return personEditingForm;
     }
 }
