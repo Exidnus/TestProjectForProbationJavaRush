@@ -15,7 +15,8 @@
             <input type="SUBMIT" value="Поиск">
         </form>
         <table align="center">
-            <tr><td>Имя</td><td>Возраст</td><td>Дата регистрации</td><td>Админ</td><td>Удаление</td></tr>
+            <tr><td>Имя</td><td>Возраст</td><td>Дата регистрации</td><td>Админ</td>
+            <td>Удаление</td><td>Изменение</td></tr>
             <c:forEach items="${personsList}" var="person">
                 <tr>
                 <td><c:out value="${person.name}" /></td>

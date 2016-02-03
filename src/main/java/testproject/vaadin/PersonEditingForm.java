@@ -6,24 +6,30 @@ import testproject.domain.Person;
 /**
  * Created by Exidnus on 23.01.2016.
  */
-public class PersonEditingForm extends FormLayout {
+class PersonEditingForm extends FormLayout {
 
     private Button save = new Button("Сохранить", this::save);
     private Button cancel = new Button("Отменить", this::cancel);
     private Button delete = new Button("Удалить", this::delete);
     private TextField nameTextField = new TextField("Имя");
     private CheckBox isAdminCheckBox = new CheckBox("Админ");
-    private TextField ageTextField = new TextField("Возраст");
+    //private TextField ageTextField = new TextField("Возраст");
+
+    private ListSelect ageListSelect = new ListSelect("Возраст");
 
     private Person person;
 
-    public PersonEditingForm() {
+    PersonEditingForm() {
         configureComponents();
         buildLayout();
     }
 
     private void configureComponents() {
-
+        for (int i = 1; i <= 100; i++) {
+            ageListSelect.addItem(i);
+        }
+        ageListSelect.setRows(5);
+        ageListSelect.setNullSelectionAllowed(false);
     }
 
     private void buildLayout() {
@@ -33,14 +39,14 @@ public class PersonEditingForm extends FormLayout {
         HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
         actions.setSpacing(true);
 
-        addComponents(actions, nameTextField, ageTextField, isAdminCheckBox);
+        addComponents(actions, nameTextField, ageListSelect, isAdminCheckBox);
     }
 
     void edit(Person person) {
         this.person = person;
 
         nameTextField.setValue(person.getName());
-        ageTextField.setValue(String.valueOf(person.getAge()));
+        ageListSelect.setValue(person.getAge());
         isAdminCheckBox.setValue(person.isAdmin());
 
         getUI().getPersonAddingForm().setVisible(false);
@@ -50,11 +56,11 @@ public class PersonEditingForm extends FormLayout {
     private void save(Button.ClickEvent event) {
         String name = nameTextField.getValue();
         boolean isAdmin = isAdminCheckBox.getValue();
-        int age = Integer.parseInt(ageTextField.getValue());
+        int age = (int) ageListSelect.getValue();
 
         if (name.length() < 2 || age < 1 || age > 100) {
-            Notification.show("Неверный ввод!", "Имя должно быть не короче 2 букв, возраст должен" +
-                    "быть\r\nот 1 года до 100 лет включительно", Notification.Type.ERROR_MESSAGE);
+            Notification.show("Неверный ввод!", "Имя должно быть не короче 2 букв",
+                    Notification.Type.ERROR_MESSAGE);
         } else {
             person.setName(name);
             person.setAge(age);

@@ -171,6 +171,14 @@ public class PersonControllerTest {
                 .andExpect(MockMvcResultMatchers.view().name("addperson"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("isWrongInput"))
                 .andExpect(MockMvcResultMatchers.model().attribute("isWrongInput", true));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/people/adding")
+                .param("name", "Vasia")
+                .param("age", "12ф")
+                .param("isAdmin", "yes"))
+                .andExpect(MockMvcResultMatchers.view().name("addperson"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("isWrongInput"))
+                .andExpect(MockMvcResultMatchers.model().attribute("isWrongInput", true));
     }
 
     @Test
@@ -303,5 +311,14 @@ public class PersonControllerTest {
 
         person.setName(oldName);
         person.setAge(oldAge);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/people/performchange")
+                .param("id", String.valueOf(0))
+                .param("name", "Vasia")
+                .param("age", "12ф")
+                .param("isAdmin", "yes"))
+                .andExpect(MockMvcResultMatchers.view().name("changeperson"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("isWrongInput"))
+                .andExpect(MockMvcResultMatchers.model().attribute("isWrongInput", true));
     }
 }

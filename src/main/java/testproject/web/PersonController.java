@@ -72,17 +72,23 @@ public class PersonController {
 
     @RequestMapping(value = "/adding", method = RequestMethod.POST)
     public String addPersonAndGoToPersonList(Model model, @RequestParam String name,
-                                             @RequestParam int age,
+                                             @RequestParam String age,
                                              @RequestParam(value = "isAdmin") String isAdminStr) {
         name = encodeFromISO88591ToUTF8(name);
         boolean isAdmin = isAdminStr.equals("yes");
+        int ageInt = 0;
+        try {
+            ageInt = Integer.parseInt(age);
+        } catch (NumberFormatException e) {
+            model.addAttribute("isWrongInput", true);
+        }
 
-        if (age < 1 || age > 100 || name.length() < 2) {
+        if (ageInt < 1 || ageInt > 100 || name.length() < 2) {
             model.addAttribute("isWrongInput", true);
             return "addperson";
         }
 
-        Person person = new Person(name, age, isAdmin);
+        Person person = new Person(name, ageInt, isAdmin);
         manager.addPerson(person);
         return "redirect:/people";
     }
@@ -113,12 +119,20 @@ public class PersonController {
 
     @RequestMapping(value = "/performchange", method = RequestMethod.POST)
     public String changePersonAndGoToPersonsList(Model model, @RequestParam int id, @RequestParam String name,
-                                                 @RequestParam int age,
+                                                 @RequestParam String age,
                                                  @RequestParam(value = "isAdmin") String isAdminStr) {
         boolean isAdmin = isAdminStr.equals("yes");
         name = encodeFromISO88591ToUTF8(name);
+        int ageInt = 0;
+        try {
+            ageInt = Integer.parseInt(age);
+        } catch (NumberFormatException e) {
+            model.addAttribute("person", manager.getPersonById(id));
+            model.addAttribute("isWrongInput", true);
+            return "changeperson";
+        }
 
-        if (age < 1 || age > 100 || name.length() < 2) {
+        if (ageInt < 1 || ageInt > 100 || name.length() < 2) {
             model.addAttribute("person", manager.getPersonById(id));
             model.addAttribute("isWrongInput", true);
             return "changeperson";
@@ -126,7 +140,7 @@ public class PersonController {
 
         Person person = manager.getPersonById(id);
         person.setName(name);
-        person.setAge(age);
+        person.setAge(ageInt);
         person.setAdmin(isAdmin);
         manager.update(person);
         return "redirect:/people";
