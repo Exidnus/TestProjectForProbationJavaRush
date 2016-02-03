@@ -46,8 +46,16 @@ public class PersonAddingForm extends FormLayout {
         Date birthDayDate = birthDay.getValue();
         int age = (int) ((nowDate.getTime() - birthDayDate.getTime()) / 365 / 24 / 60 / 60 / 1000);
 
-        getUI().getManager().addPerson(new Person(name, age, isAdmin));
-        getUI().refreshGrid();
+        if (name.length() < 2 || age > 100 || age < 1) {
+            Notification.show("Неверный ввод!", "Имя должно быть не короче 2 букв, возраст должен" +
+                    "быть\r\nот 1 года до 100 лет включительно", Notification.Type.ERROR_MESSAGE);
+        } else {
+            getUI().getManager().addPerson(new Person(name, age, isAdmin));
+            nameTextField.setValue("");
+            isAdminCheckBox.setValue(false);
+            birthDay.setValue(null);
+            getUI().refreshGrid();
+        }
     }
 
     private void cancel(Button.ClickEvent event) {

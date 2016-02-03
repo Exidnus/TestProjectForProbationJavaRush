@@ -10,6 +10,14 @@
     <body>
         <div class="basic">
         <h1>Измените данные</h1>
+        <c:choose>
+            <c:when test="${isWrongInput}">
+                <p class="wrong">
+                    Неверный ввод! Пожалуйста, заполните все поля! Имя должно быть не короче
+                    двух букв, возраст от 1 включительно до 100 включительно.
+                </p>
+            </c:when>
+        </c:choose>
         <form method="POST" action="<c:url value="/people/performchange" />" >
             Имя: <input type="text" name="name" value="${person.name}" required /><br/>
             Возраст: <input type="text" name="age" value="${person.age}" required /><br/>

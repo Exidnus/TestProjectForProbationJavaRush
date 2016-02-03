@@ -74,13 +74,14 @@ public class PersonController {
     public String addPersonAndGoToPersonList(Model model, @RequestParam String name,
                                              @RequestParam int age,
                                              @RequestParam(value = "isAdmin") String isAdminStr) {
+        name = encodeFromISO88591ToUTF8(name);
+        boolean isAdmin = isAdminStr.equals("yes");
+
         if (age < 1 || age > 100 || name.length() < 2) {
             model.addAttribute("isWrongInput", true);
             return "addperson";
         }
 
-        boolean isAdmin = isAdminStr.equals("yes");
-        name = encodeFromISO88591ToUTF8(name);
         Person person = new Person(name, age, isAdmin);
         manager.addPerson(person);
         return "redirect:/people";
@@ -111,11 +112,18 @@ public class PersonController {
     }
 
     @RequestMapping(value = "/performchange", method = RequestMethod.POST)
-    public String changePersonAndGoToPersonsList(@RequestParam int id, @RequestParam String name,
+    public String changePersonAndGoToPersonsList(Model model, @RequestParam int id, @RequestParam String name,
                                                  @RequestParam int age,
                                                  @RequestParam(value = "isAdmin") String isAdminStr) {
         boolean isAdmin = isAdminStr.equals("yes");
         name = encodeFromISO88591ToUTF8(name);
+
+        if (age < 1 || age > 100 || name.length() < 2) {
+            model.addAttribute("person", manager.getPersonById(id));
+            model.addAttribute("isWrongInput", true);
+            return "changeperson";
+        }
+
         Person person = manager.getPersonById(id);
         person.setName(name);
         person.setAge(age);

@@ -259,4 +259,49 @@ public class PersonControllerTest {
         Assert.assertEquals(person, changedPerson);
         Mockito.verify(mockManager, Mockito.atLeastOnce()).update(person);
     }
+
+    @Test
+    public void shouldCatchErrorsWhenChangingPerson() throws Exception {
+        PersonManager mockManager = Mockito.mock(PersonManager.class);
+        PersonController personController = new PersonController(mockManager);
+        Person person = persons.get(0);
+        String oldName = person.getName();
+        int oldAge = person.getAge();
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
+
+        person.setName("A");
+        mockMvc.perform(MockMvcRequestBuilders.post("/people/performchange")
+                .param("id", String.valueOf(0))
+                .param("name", person.getName())
+                .param("age", String.valueOf(person.getAge()))
+                .param("isAdmin", person.isAdmin() ? "yes" : "no"))
+                .andExpect(MockMvcResultMatchers.view().name("changeperson"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("isWrongInput"))
+                .andExpect(MockMvcResultMatchers.model().attribute("isWrongInput", true));
+
+        person.setName(oldName);
+
+        person.setAge(0);
+        mockMvc.perform(MockMvcRequestBuilders.post("/people/performchange")
+                .param("id", String.valueOf(0))
+                .param("name", person.getName())
+                .param("age", String.valueOf(person.getAge()))
+                .param("isAdmin", person.isAdmin() ? "yes" : "no"))
+                .andExpect(MockMvcResultMatchers.view().name("changeperson"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("isWrongInput"))
+                .andExpect(MockMvcResultMatchers.model().attribute("isWrongInput", true));
+
+        person.setAge(120);
+        mockMvc.perform(MockMvcRequestBuilders.post("/people/performchange")
+                .param("id", String.valueOf(0))
+                .param("name", person.getName())
+                .param("age", String.valueOf(person.getAge()))
+                .param("isAdmin", person.isAdmin() ? "yes" : "no"))
+                .andExpect(MockMvcResultMatchers.view().name("changeperson"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("isWrongInput"))
+                .andExpect(MockMvcResultMatchers.model().attribute("isWrongInput", true));
+
+        person.setName(oldName);
+        person.setAge(oldAge);
+    }
 }
