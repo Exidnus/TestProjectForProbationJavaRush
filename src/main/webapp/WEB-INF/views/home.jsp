@@ -26,8 +26,8 @@
             <p>
                 О полноценном тестировании, конечно, говорить не приходится. Но для HomeController,
                 PersonController, а также для backend'a написаны тесты (не идеальные, к сожалению).
-                Приложение тестировалось на Windows 10 и Linux Mint 17.3 (Линукс запускал в Oracle
-                VirtualBox), Tomcat 8.0.30, MySQL 5.5.47 и 5.7.10, jdk 8u-72. 
+                Приложение тестировалось на jdk 8u-72, Windows 10 и Linux Mint 17.3 (Линукс запускал в Oracle
+                VirtualBox), Tomcat 8.0.30, MySQL 5.5.47, 5.6.26 и 5.7.10.
             </p>
             <h2>Известные проблемы</h2>
             <p>
