@@ -81,6 +81,10 @@ public class Person implements Serializable {
         return simpleDateFormat.format(createdDate);
     }
 
+    public String getStringAdmin() {
+        return isAdmin ? "Да" : "Нет";
+    }
+
     /*
     В документации к Hibernate настойчиво рекомендуется
     реализовывать equals и hashcode на основе id, что я и сделал

@@ -68,10 +68,11 @@ public class SimpleVaadinUI extends UI {
         List<Grid.Column> columns = personsGrid.getColumns();
         columns.get(0).setHeaderCaption("Имя");
         columns.get(1).setHeaderCaption("Возраст");
-        columns.get(2).setHeaderCaption("Админ");
+        personsGrid.removeColumn(columns.get(2).getPropertyId());
         personsGrid.removeColumn(columns.get(3).getPropertyId());
         personsGrid.removeColumn(columns.get(4).getPropertyId());
         columns.get(5).setHeaderCaption("Дата создания записи");
+        columns.get(6).setHeaderCaption("Админ");
 
         personsGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         personsGrid.addSelectionListener(selectionEvent -> personEditingForm.edit((Person) personsGrid
