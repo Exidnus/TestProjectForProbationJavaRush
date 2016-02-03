@@ -9,7 +9,9 @@ import java.util.List;
 
 /**
  * Created by Exidnus on 06.01.2016.
- * Класс для тестирования
+ */
+/*
+Класс для тестирования, фактически уже не нужен
  */
 @Repository //@Primary
 public class PersonRepositoryListSimpleImpl implements PersonRepository {
@@ -81,5 +83,15 @@ public class PersonRepositoryListSimpleImpl implements PersonRepository {
     public void setOrder(String orderedBy, boolean isAscending) {
         this.orderedBy = orderedBy;
         this.isAscending = isAscending;
+    }
+
+    @Override
+    public List<Person> getAllWithoutOrder() {
+        return persons;
+    }
+
+    @Override
+    public List<Person> getPageWithoutOrder(int offset, int length) {
+        return persons.subList(offset, length);
     }
 }

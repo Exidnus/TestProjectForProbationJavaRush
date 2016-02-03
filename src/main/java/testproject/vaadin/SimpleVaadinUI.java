@@ -34,6 +34,12 @@ public class SimpleVaadinUI extends UI {
     private PersonEditingForm personEditingForm = new PersonEditingForm();
     private PersonAddingForm personAddingForm = new PersonAddingForm();
 
+    private Button previous = new Button("Следующая страница");
+    private Button next = new Button("Следующая страница");
+
+    private int currentPosition = 0;
+    private int length = 10;
+
     private BeanItemContainer<Person> beanItemContainer;
 
     private PersonManager manager;
@@ -52,7 +58,10 @@ public class SimpleVaadinUI extends UI {
     private void configureComponents() {
         filter.setInputPrompt("Поиск по имени");
         filter.addTextChangeListener(textChangeEvent -> {
-            if (textChangeEvent.getText().length() == 0) refreshGrid();
+            if (textChangeEvent.getText().length() == 0) {
+                currentPosition = 0;
+                refreshGrid();
+            }
             else refreshGrid(textChangeEvent.getText());
         });
 
@@ -61,7 +70,16 @@ public class SimpleVaadinUI extends UI {
         personEditingForm.setVisible(false);
         personAddingForm.setVisible(false);
 
-        beanItemContainer = new BeanItemContainer<>(Person.class, manager.getAll());
+        previous.addClickListener(clickEvent -> {
+            if (currentPosition > 0) currentPosition -= length;
+            refreshGrid();
+        });
+        next.addClickListener(clickEvent -> {
+            if (currentPosition + length < manager.getCount()) currentPosition += length;
+            refreshGrid();
+        });
+
+        beanItemContainer = new BeanItemContainer<>(Person.class);
         personsGrid.setContainerDataSource(beanItemContainer);
         personsGrid.setColumnOrder("name", "age");
 
@@ -78,6 +96,7 @@ public class SimpleVaadinUI extends UI {
         personsGrid.addSelectionListener(selectionEvent -> personEditingForm.edit((Person) personsGrid
                 .getSelectedRow()));
 
+        refreshGrid();
     }
 
     private void buildLayouts() {
@@ -95,10 +114,13 @@ public class SimpleVaadinUI extends UI {
         main.setSizeFull();
         main.setExpandRatio(center, 1);
 
-        VerticalLayout reallyMain = new VerticalLayout(main, goToHomePage);
+        HorizontalLayout changePage = new HorizontalLayout(previous, next);
+
+        VerticalLayout reallyMain = new VerticalLayout(main, changePage, goToHomePage);
         reallyMain.setSizeFull();
         reallyMain.setExpandRatio(main, 1);
         reallyMain.setComponentAlignment(goToHomePage, Alignment.BOTTOM_CENTER);
+        reallyMain.setComponentAlignment(changePage, Alignment.MIDDLE_CENTER);
 
         setContent(reallyMain);
     }
@@ -106,14 +128,15 @@ public class SimpleVaadinUI extends UI {
     void refreshGrid() {
         filter.setValue("");
 
-        beanItemContainer = new BeanItemContainer<>(Person.class, manager.getAll());
+        beanItemContainer = new BeanItemContainer<>(Person.class,
+                manager.getPageWithoutOrder(currentPosition, length));
         try {
             personsGrid.setContainerDataSource(beanItemContainer);
         } catch (Exception ignored) {
             //Здесь выбрасывается исключение (NullPointerException - причина)
             //На форуме ваадин об этой ошибки писали, в качестве решения
             //предлагалось удалять все итемы из бинИтемКонтейнера (мне это не помогло)
-            //TODO Что-то сделать с этим нужно
+            //TODO Что-то сделать с этим, пожалуй, нужно
         }
         personEditingForm.setVisible(false);
         personAddingForm.setVisible(false);

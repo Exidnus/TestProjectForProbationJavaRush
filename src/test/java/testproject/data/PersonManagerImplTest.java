@@ -36,6 +36,17 @@ public class PersonManagerImplTest extends TestCase {
         assertEquals(7, manager.getPage(7, 7).size());
     }
 
+    @Test
+    public void shouldGetAllWithoutOrder() {
+        assertEquals(21, manager.getAllWithoutOrder().size());
+    }
+
+    @Test
+    public void shouldGetPageWithoutOder() {
+        assertEquals(10, manager.getPageWithoutOrder(0, 10).size());
+        assertEquals(7, manager.getPageWithoutOrder(7, 7).size());
+    }
+
     /*
     Пришлось вместе тестировать два метода, иначе начинались проблемы с методом shouldGetCount()
     Такое ощущение, что порядок выполнения тестовых методов в Maven и IntelliJ отличаются

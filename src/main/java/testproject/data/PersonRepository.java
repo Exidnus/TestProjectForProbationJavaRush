@@ -17,4 +17,7 @@ public interface PersonRepository {
     Person getPersonById(int id);
     void update(Person person);
     void setOrder(String orderedBy, boolean isAscending);
+
+    List<Person> getAllWithoutOrder();
+    List<Person> getPageWithoutOrder(int offset, int length);
 }

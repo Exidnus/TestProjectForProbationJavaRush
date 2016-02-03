@@ -72,4 +72,16 @@ public class PersonManagerImpl implements PersonManager {
     public void setOrder(String orderedBy, boolean isAscending) {
         personRepository.setOrder(orderedBy, isAscending);
     }
+
+    @Override
+    @Transactional
+    public List<Person> getAllWithoutOrder() {
+        return personRepository.getAllWithoutOrder();
+    }
+
+    @Override
+    @Transactional
+    public List<Person> getPageWithoutOrder(int offset, int length) {
+        return personRepository.getPageWithoutOrder(offset, length);
+    }
 }

@@ -16,13 +16,13 @@ import java.util.List;
  */
 @Repository
 @Primary
-public class PersonRepositoryHibernate implements PersonRepository {
+public class PersonRepositoryHibernateImpl implements PersonRepository {
     private SessionFactory sessionFactory;
     private boolean isAscending = true;
     private String orderedBy = "name";
 
     @Autowired
-    public PersonRepositoryHibernate(SessionFactory sessionFactory) {
+    public PersonRepositoryHibernateImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -76,5 +76,16 @@ public class PersonRepositoryHibernate implements PersonRepository {
     public void setOrder(String orderedBy, boolean isAscending) {
         this.orderedBy = orderedBy;
         this.isAscending = isAscending;
+    }
+
+    @Override
+    public List<Person> getAllWithoutOrder() {
+        return sessionFactory.getCurrentSession().createCriteria(Person.class).list();
+    }
+
+    @Override
+    public List<Person> getPageWithoutOrder(int offset, int length) {
+        return sessionFactory.getCurrentSession().createCriteria(Person.class)
+                .setFirstResult(offset).setMaxResults(length).list();
     }
 }

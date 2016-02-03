@@ -27,7 +27,7 @@
                 О полноценном тестировании, конечно, говорить не приходится. Но для HomeController,
                 PersonController, а также для backend'a написаны тесты (не идеальные, к сожалению).
                 Приложение тестировалось на Windows 10 и Linux Mint 17.3 (Линукс запускал в Oracle
-                VirtualBox), Tomcat 8.0.30, MySQL 5.5.47 и 5.7.10.
+                VirtualBox), Tomcat 8.0.30, MySQL 5.5.47 и 5.7.10, jdk 8u-72. 
             </p>
             <h2>Известные проблемы</h2>
             <p>
@@ -40,8 +40,8 @@
                 java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:143)
                 com.mysql.jdbc.AbandonedConnectionCleanupThread.run(AbandonedConnectionCleanupThread.java:43)<br/>
                 Если много раз деплоить и андеплоить приложение, утечки становятся заметными. <b>Решается проблема
-                простым перезапуском Tomcat'a.</b> Я пытался найти решение получше, но ничего работающего не нашел.
-                В сети советуют переложить MySQL Connector Java в либы Томката и убрать euj из либов приложения
+                простым перезапуском Томката.</b> Я пытался найти решение получше, но ничего работающего не нашел.
+                В сети советуют переложить MySQL Connector Java в либы Томката и убрать eго из либов приложения
                 (не помогло), советуют использовать версию коннектора 5.1.37 и выше (не помогло, пробовал и с 5.1.37).
                 Советуют еще прописывать AbandonedConnectionCleanupThread.shutdown()
                 и DriverManager.deregisterDriver(driver). Пробовал и так, добавлял
