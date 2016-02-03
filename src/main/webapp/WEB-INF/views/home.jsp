@@ -32,20 +32,21 @@
             <h2>Известные проблемы</h2>
             <p>
                 Главной проблемой являются утечки памяти при многократном
-                деплое/андеплое. В логах появляется следующее сообщение:
+                деплое/андеплое. В логах появляется следующее сообщение:<br/>
                 WARNING [http-apr-8080-exec-12] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesThreads
                 The web application [TestProject] appears to have started a thread named [Abandoned connection cleanup thread]
                 but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
                 java.lang.Object.wait(Native Method)
                 java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:143)
-                com.mysql.jdbc.AbandonedConnectionCleanupThread.run(AbandonedConnectionCleanupThread.java:43)
-                Если много раз деплоить и андеплоить приложение, это становится заметно. <b>Решается проблема
+                com.mysql.jdbc.AbandonedConnectionCleanupThread.run(AbandonedConnectionCleanupThread.java:43)<br/>
+                Если много раз деплоить и андеплоить приложение, утечки становятся заметными. <b>Решается проблема
                 простым перезапуском Tomcat'a.</b> Я пытался найти решение получше, но ничего работающего не нашел.
-                В сети советуют переложить MySQL Connector Java в либы Томката и убрать из либов приложения
+                В сети советуют переложить MySQL Connector Java в либы Томката и убрать euj из либов приложения
                 (не помогло), советуют использовать версию коннектора 5.1.37 и выше (не помогло, пробовал и с 5.1.37).
                 Советуют еще прописывать AbandonedConnectionCleanupThread.shutdown()
                 и DriverManager.deregisterDriver(driver). Пробовал и так, добавлял
                 Listener, <b>но это только маскирует проблему, а не решает ее.</b>
+                Нить закрывается, а соединение остается. 
                 Часто встречал мнение, что это вроде как и не проблема вовсе,
                 нужно просто перезапускать Томкат.
                 Кажется (могу ошибаться на этот счет), проблема появилась после того,
