@@ -52,7 +52,9 @@
                 Советуют еще прописывать AbandonedConnectionCleanupThread.shutdown()
                 и DriverManager.deregisterDriver(driver). Пробовал и так, добавлял
                 Listener, <b>но это только маскирует проблему, а не решает ее.</b>
-                Нить закрывается, а соединение остается.
+                Нить закрывается, а соединение остается. Пробовал решить проблему с помощью
+                <a href="http://java.jiderhamn.se/2012/03/04/classloader-leaks-vi-this-means-war-leak-prevention-library/">
+                    Leak Prevention library</a>, тоже, к сожалению, не помогло.
                 Часто встречал мнение, что это вроде как и не проблема вовсе,
                 нужно просто перезапускать Томкат.
                 Кажется (могу ошибаться на этот счет), проблема появилась после того,

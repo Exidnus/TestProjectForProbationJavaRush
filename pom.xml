@@ -142,6 +142,14 @@
             <version>3.2</version>
         </dependency>
 
+        <!-- пытался решить проблему с утечкой памяти (не помогло) -->
+
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
+        </dependency>
+
     </dependencies>
 
     <repositories>
